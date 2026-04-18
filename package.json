@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit",
     "eval": "tsx src/run.ts",
     "eval:smoke": "tsx src/run.ts --smoke",
+    "providers:smoke": "tsx src/smoke_providers.ts",
     "judge": "tsx src/judge.ts",
     "report": "tsx src/report.ts"
   },

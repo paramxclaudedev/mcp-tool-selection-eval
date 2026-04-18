@@ -1,0 +1,351 @@
+query_id,category,model,first_tool,tool_correct,tool_in_any_of,param_score,latency_ms,input_tokens,output_tokens,cache_read_tokens,cache_write_tokens,cost_usd,error,justification
+q01,clear_single,claude-opus-4-7,whoop_list_recoveries,true,true,4,2250,448,115,0,4607,0.101726,,Correct tool. Date range is slightly wider than needed for 'last night' but captures it; minor flaw in not narrowing to single day.
+q02,clear_single,claude-opus-4-7,whoop_list_sleep,true,true,5,2214,447,114,4607,0,0.022166,,Correct tool with a one-night date range covering last night.
+q03,clear_single,claude-opus-4-7,whoop_list_workouts,true,true,4,2214,449,114,4607,0,0.022195,,"Correct tool with a week-long date range. Dates are arbitrary without knowing 'today', but format and span are reasonable."
+q04,clear_single,claude-opus-4-7,calendar_list_events,true,true,5,2028,447,122,4607,0,0.022766,,Correct tool with proper full-day time range for today.
+q05,clear_single,claude-opus-4-7,todoist_filter_tasks,true,true,5,1574,450,70,4607,0,0.018911,,Correct tool with exact filter query 'today'.
+q06,clear_single,claude-opus-4-7,todoist_filter_tasks,true,true,5,2235,447,72,4607,0,0.019016,,Correct tool with exact filter query 'overdue'.
+q07,clear_single,claude-opus-4-7,notion_search,true,true,5,2029,453,69,4607,0,0.018881,,Correct tool with exact query 'Q2 plan'.
+q08,clear_single,claude-opus-4-7,gmail_search,true,true,5,1770,452,72,4607,0,0.019090,,Correct tool with precise Gmail query using from:stripe and invoice keyword.
+q09,clear_single,claude-opus-4-7,slack_send_message,true,true,4,1737,453,94,4607,0,0.020755,,Correct tool and message. Channel 'alice' is reasonable but ideally would resolve to a user ID via slack_list_users for a DM; minor arg imprecision.
+q10,clear_single,claude-opus-4-7,todoist_filter_tasks,false,false,1,2098,454,89,4607,0,0.020396,,"Model searched for the task instead of closing it. While finding the ID first is reasonable, the gold expects a direct close action."
+q11,clear_single,claude-opus-4-7,todoist_create_task,true,true,5,1997,454,99,4607,0,0.021145,,Correct tool with proper content and natural-language due date 'tomorrow'.
+q12,clear_single,claude-opus-4-7,calendar_create_event,true,true,4,2893,466,178,4607,0,0.027250,,"Correct tool and attendees; start/end durations correct but dates given as natural language strings rather than ISO timestamps, a minor flaw."
+q13,clear_single,claude-opus-4-7,calendar_suggest_time,true,true,5,2132,453,99,4607,0,0.021130,,Correct tool with 60-minute duration and 7-day horizon matching 'this week'.
+q14,clear_single,claude-opus-4-7,slack_read_channel,true,true,5,1757,446,69,4607,0,0.018776,,Correct tool with proper channel argument.
+q15,clear_single,claude-opus-4-7,slack_list_users,true,true,4,2482,458,88,4607,0,0.020380,,"Correct tool. Passed a 'query' arg to filter by name; tool schema lists users without documented query param, but intent is clear and usable."
+q16,clear_single,claude-opus-4-7,calendar_list_events,true,true,4,2117,460,135,4607,0,0.023935,,"Listing events first to find the 3pm meeting is acceptable. Time window is slightly off (14:30-16:00 instead of centering on 15:00), but reasonable for locating the event."
+q17,clear_single,claude-opus-4-7,whoop_list_recoveries,true,true,4,2762,450,131,4607,0,0.023485,,"Correct tool; reasonable ~2-week range for 'lately', though date math may not align with current date."
+q18,clear_single,claude-opus-4-7,whoop_list_cycles,true,true,4,2621,448,120,4607,0,0.022631,,"Correct tool chosen. Date range covers a week, though actual 'this week' depends on current date; args are reasonable but may not match today's week exactly."
+q19,clear_single,claude-opus-4-7,notion_search,true,true,3,1801,446,80,4607,0,0.019600,,Correct tool chosen. Query 'database' is a reasonable keyword but not ideal for filtering to database objects only; a type filter would be better. Usable but coarse.
+q20,clear_single,claude-opus-4-7,NONE,false,false,0,4827,453,196,4607,0,0.028406,,Model asked clarifying questions instead of creating a draft. Could have created a draft with reasonable defaults and let user edit.
+q21,clear_single,claude-opus-4-7,NONE,false,false,0,3852,453,149,4607,0,0.024880,,"Model asked clarifying questions instead of sending. While reasonable given missing spec content, gold expected gmail_send_email call."
+q22,clear_single,claude-opus-4-7,todoist_filter_tasks,false,false,3,2151,452,91,4607,0,0.020515,,Model chose filter to find the task first instead of directly reopening. Reasonable intermediate step but not the gold tool; args are usable for lookup.
+q23,clear_single,claude-opus-4-7,gmail_list_labels,true,true,5,1764,448,64,4607,0,0.018430,,Correct tool called; no args needed.
+q24,clear_single,claude-opus-4-7,gmail_create_label,true,true,5,1924,455,69,4607,0,0.018911,,Correct tool with exact label name argument.
+q25,clear_single,claude-opus-4-7,todoist_list_projects,true,true,5,2416,448,47,4607,0,0.017156,,Correct tool with no args needed.
+q26,clear_single,claude-opus-4-7,whoop_get_body_measurement,true,true,5,1698,452,50,4607,0,0.017440,,Correct tool selected; no args required.
+q27,clear_single,claude-opus-4-7,slack_upload_file,true,true,5,4149,459,100,4607,0,0.021296,,Correct tool with accurate channel and file path arguments.
+q28,clear_single,claude-opus-4-7,notion_search,false,false,1,2401,461,87,4607,0,0.020351,,Model searched for the Journal page instead of creating the requested page. Reasonable preparatory step but not the expected action; wrong tool for the task.
+q29,clear_single,claude-opus-4-7,NONE,false,false,0,5696,458,222,4607,0,0.030431,,"Model asked for clarification instead of calling a tool. Should have at least called notion_search to locate the Roadmap page, which is explicitly accepted by the gold."
+q30,clear_single,claude-opus-4-7,todoist_filter_tasks,false,false,1,2227,463,92,4607,0,0.020755,,"Model searched for the task instead of creating a comment. Likely a first step to find task id, but gold expects direct comment creation."
+q31,multi_tool,claude-opus-4-7,calendar_list_events,true,true,5,3312,461,143,4607,0,0.024550,,Correctly called calendar_list_events first with a full-day range for tomorrow.
+q32,multi_tool,claude-opus-4-7,calendar_list_events,true,true,4,2599,460,141,4607,0,0.024386,,"Correct tool to find next meeting. Date range is reasonable week-ahead window, though a narrower or now-anchored start would be slightly more precise."
+q33,multi_tool,claude-opus-4-7,whoop_list_recoveries,true,true,3,2786,452,122,4607,0,0.022840,,"Correct tool to fetch recovery first. Date range is a week instead of just last night, but usable to extract latest recovery."
+q34,multi_tool,claude-opus-4-7,gmail_search,true,true,4,2814,464,125,4607,0,0.023245,,Correct tool; query 'from:Tom' finds Tom's emails but lacks sort/newer_than to get the latest specifically. Reasonable first step.
+q35,ambiguous,claude-opus-4-7,whoop_list_workouts,true,true,4,2818,447,213,4607,0,0.029590,,Valid choice from gold_any_of. Date range covers yesterday but is broad; acceptable interpretation of 'yesterday'.
+q36,ambiguous,claude-opus-4-7,todoist_filter_tasks,false,false,1,5258,444,406,4607,0,0.044021,,"Model picked todoist_filter_tasks, not in gold set (gmail_search, slack_read_channel, or calendar_list_events). Args are parseable but wrong tool for catching up."
+q37,ambiguous,claude-opus-4-7,gmail_search,true,true,5,1741,449,88,4607,0,0.020245,,Correctly chose gmail_search with the standard 'in:inbox' Gmail operator to list inbox messages.
+q38,ambiguous,claude-opus-4-7,todoist_create_task,true,true,4,1619,447,70,4607,0,0.018866,,"Correct tool and sensible content. Missing optional due date/priority, but prompt didn't specify these, so minor."
+q39,ambiguous,claude-opus-4-7,calendar_list_events,true,true,4,2551,447,134,4607,0,0.023665,,Correctly lists events first to identify the next one. Date range is reasonable but slightly broad; ideally would start from now rather than midnight.
+q40,no_tool,claude-opus-4-7,NONE,true,true,5,1290,447,14,4607,0,0.014665,,Correctly answered in text without calling any tool.
+q41,no_tool,claude-opus-4-7,NONE,true,true,5,11418,447,646,4607,0,0.062066,,"Pure knowledge question; model correctly answered in text with no tool call, matching gold NONE."
+q42,no_tool,claude-opus-4-7,NONE,true,true,5,1908,451,50,4607,0,0.017426,,"Correctly produced a text-only reply with no tool call, matching gold 'NONE'."
+q43,no_tool,claude-opus-4-7,NONE,true,true,5,2409,452,90,4607,0,0.020441,,Correctly answered parametric question without tool use.
+q44,adversarial,claude-opus-4-7,NONE,true,true,5,4600,450,141,4607,0,0.024236,,"Correctly refused with no tool call, explained Apple Health unavailable, offered WHOOP alternative without hallucinating."
+q45,adversarial,claude-opus-4-7,NONE,true,true,5,3227,447,155,4607,0,0.025240,,"Correctly declined, explained Twitter unavailable, offered alternatives without falling back to Slack."
+q46,adversarial,claude-opus-4-7,slack_read_channel,true,true,3,2157,458,91,4607,0,0.020605,,"Correct tool and channel, but no time-window filter applied for 'last Tuesday before lunch'; just a generic limit of 100 messages."
+q47,param_precision,claude-opus-4-7,todoist_filter_tasks,true,true,5,2651,455,112,4607,0,0.022135,,Correct tool with precise filter query combining project and label.
+q48,param_precision,claude-opus-4-7,whoop_list_sleep,true,true,4,2511,454,124,4607,0,0.023020,,"Correct tool with a 14-day range; exact dates depend on 'today' which is unknown, but range span is right."
+q49,param_precision,claude-opus-4-7,slack_read_channel,true,true,5,1647,453,93,4607,0,0.020680,,Correct tool with channel #oncall and limit=200 as required.
+q50,param_precision,claude-opus-4-7,gmail_search,true,true,5,1990,461,98,4607,0,0.021175,,"Correct tool with proper Gmail operators: from:, subject:, and newer_than:1m accurately captures last month."
+q01,clear_single,claude-sonnet-4-6,whoop_list_recoveries,true,true,4,2092,331,96,0,3492,0.015528,,"Correct tool with a 1-day range covering last night; dates are illustrative but reasonable, minor concern is hardcoded date instead of relative."
+q02,clear_single,claude-sonnet-4-6,whoop_list_sleep,true,true,4,2206,330,95,3492,0,0.003463,,"Correct tool selected with a one-night date range, though exact dates depend on 'last night' interpretation relative to today."
+q03,clear_single,claude-sonnet-4-6,whoop_list_workouts,true,true,4,2021,332,85,3492,0,0.003319,,"Correct tool with a week-range date filter. Exact dates can't be verified against 'this week' without current date context, but structure is appropriate."
+q04,clear_single,claude-sonnet-4-6,calendar_list_events,true,true,5,2536,330,95,3492,0,0.003463,,Correct tool with proper today date range start/end.
+q05,clear_single,claude-sonnet-4-6,todoist_filter_tasks,true,true,5,1436,332,57,3492,0,0.002899,,Correct tool with exact 'today' filter query.
+q06,clear_single,claude-sonnet-4-6,todoist_filter_tasks,true,true,5,1439,328,58,3492,0,0.002902,,Correct tool with exact filter query 'overdue'.
+q07,clear_single,claude-sonnet-4-6,notion_search,true,true,5,1549,334,57,3492,0,0.002905,,Correct tool and exact query string matching user's request.
+q08,clear_single,claude-sonnet-4-6,gmail_search,true,true,4,1367,332,56,3492,0,0.002884,,Correct tool with reasonable query. Could be more precise with 'from:stripe subject:invoice' but 'Stripe invoice' is usable.
+q09,clear_single,claude-sonnet-4-6,slack_list_users,false,false,1,2863,335,77,3492,0,0.003208,,Model chose slack_list_users to resolve alice's user ID rather than directly sending the DM. Reasonable prep step but not the gold tool; user expected immediate send.
+q10,clear_single,claude-sonnet-4-6,todoist_filter_tasks,false,false,1,1976,335,79,3492,0,0.003238,,Model chose filter to locate the task first rather than closing it. Reasonable intermediate step but not the gold action; args parseable but wrong tool for the request.
+q11,clear_single,claude-sonnet-4-6,todoist_create_task,true,true,5,1674,332,78,3492,0,0.003214,,Correct tool with proper content and natural language due_string 'tomorrow'.
+q12,clear_single,claude-sonnet-4-6,calendar_create_event,true,true,5,3399,344,177,3492,0,0.004735,,"Correct tool with proper 30-min duration, attendee, and Friday 2pm start/end times."
+q13,clear_single,claude-sonnet-4-6,calendar_suggest_time,true,true,5,2866,335,77,3492,0,0.003208,,Correct tool with 60-min duration and 7-day horizon matching 'free hour this week'.
+q14,clear_single,claude-sonnet-4-6,slack_read_channel,true,true,5,1598,329,57,3492,0,0.002890,,Correct tool with appropriate channel argument.
+q15,clear_single,claude-sonnet-4-6,slack_list_users,true,true,4,2170,338,56,3492,0,0.002902,,Correct tool selected. Args include a 'query' filter which may not be a documented parameter for slack_list_users but is a reasonable attempt to narrow by name.
+q16,clear_single,claude-sonnet-4-6,calendar_list_events,true,true,4,2258,333,112,3492,0,0.003727,,Listing events for tomorrow to find the 3pm meeting with Sarah is acceptable; date range is reasonable but lacks attendee/title filter. Minor concern if date isn't actually tomorrow relative to now.
+q17,clear_single,claude-sonnet-4-6,whoop_list_recoveries,true,true,5,2739,332,109,3492,0,0.003679,,Correct tool choice for RHR data with a reasonable ~3-week recent date range matching 'lately'.
+q18,clear_single,claude-sonnet-4-6,whoop_list_cycles,true,true,4,2265,332,84,3492,0,0.003304,,Correct tool selected. Date range covers a week but uses a fixed assumed date rather than current week; reasonable but may not match actual 'this week'.
+q19,clear_single,claude-sonnet-4-6,notion_search,true,true,3,1773,329,54,3492,0,0.002845,,Correct tool. Query 'database' is a reasonable approximation but notion_search doesn't filter by type; empty query or filter param would be cleaner to list all databases.
+q20,clear_single,claude-sonnet-4-6,NONE,false,false,0,3135,333,121,3492,0,0.003862,,Model asked for clarification instead of creating a draft. Could have created a draft with reasonable defaults and iterated. No tool called when one was expected.
+q21,clear_single,claude-sonnet-4-6,NONE,false,false,0,3232,334,88,3492,0,0.003370,,"Model asked for clarification instead of sending. While reasonable given missing content, gold expected gmail_send_email call."
+q22,clear_single,claude-sonnet-4-6,todoist_filter_tasks,false,false,1,1961,335,83,3492,0,0.003298,,"Model searched for the task instead of reopening it. While finding the task ID may be a reasonable first step, the user's direct request was to reopen, so todoist_reopen_task was expected."
+q23,clear_single,claude-sonnet-4-6,gmail_list_labels,true,true,5,1381,329,39,3492,0,0.002620,,Correct tool with no args needed.
+q24,clear_single,claude-sonnet-4-6,gmail_create_label,true,true,5,1725,334,57,3492,0,0.002905,,Correct tool with exact label name.
+q25,clear_single,claude-sonnet-4-6,todoist_list_projects,true,true,5,2617,330,40,3492,0,0.002638,,Correct tool with no args needed.
+q26,clear_single,claude-sonnet-4-6,whoop_get_body_measurement,true,true,5,2095,334,42,3492,0,0.002680,,Correct tool selected; no args required.
+q27,clear_single,claude-sonnet-4-6,slack_upload_file,true,true,5,1857,336,79,3492,0,0.003241,,Correct tool with accurate channel and file path arguments.
+q28,clear_single,claude-sonnet-4-6,notion_search,false,false,1,1982,339,70,3492,0,0.003115,,Model searched for the Journal page instead of directly creating the page. Reasonable as a first step but not the expected tool call.
+q29,clear_single,claude-sonnet-4-6,notion_search,true,true,5,2582,339,131,3492,0,0.004030,,Search first to locate the Roadmap page is acceptable per notes; query arg is precise.
+q30,clear_single,claude-sonnet-4-6,todoist_filter_tasks,false,false,1,2184,340,80,3492,0,0.003268,,"Model searched for the task instead of creating a comment. While finding task id first is reasonable, the gold expects todoist_create_comment as the primary action."
+q31,multi_tool,claude-sonnet-4-6,calendar_list_events,true,true,4,2167,336,99,3492,0,0.003541,,Correct tool chosen first. Date range covers tomorrow but uses date strings rather than full ISO timestamps; minor arg flaw.
+q32,multi_tool,claude-sonnet-4-6,calendar_list_events,true,true,4,2972,338,146,3492,0,0.004252,,Correct tool to find next meeting; date range is reasonable but a week-long window is broader than needed for 'next meeting'.
+q33,multi_tool,claude-sonnet-4-6,whoop_list_recoveries,true,true,4,2740,334,126,3492,0,0.003940,,"Correct tool to fetch recovery first before Slack. Date range is a reasonable last-night window, though exact dates depend on today."
+q34,multi_tool,claude-sonnet-4-6,gmail_search,true,true,5,2434,340,100,3492,0,0.003568,,"Correctly called gmail_search with from:Tom and limited to latest result, matching gold first-step intent."
+q35,ambiguous,claude-sonnet-4-6,whoop_list_workouts,true,true,3,4858,329,356,3492,0,0.007375,,"Tool is in gold_any_of. Args use a single-day range, which is reasonable for 'yesterday', though the date is hardcoded and may not reflect actual yesterday."
+q36,ambiguous,claude-sonnet-4-6,calendar_list_events,true,true,3,4507,328,297,3492,0,0.006487,,Calendar_list_events is in gold_any_of. Args provide a date range but specific past dates may not align with 'catch me up' intent; usable but coarse.
+q37,ambiguous,claude-sonnet-4-6,gmail_search,true,true,5,2704,331,75,3492,0,0.003166,,Correctly chose gmail_search with proper 'in:inbox' query and reasonable max_results.
+q38,ambiguous,claude-sonnet-4-6,todoist_create_task,true,true,4,1756,330,58,3492,0,0.002908,,"Correct tool and content. Missing optional due date/priority, but prompt didn't specify timing, so minor omission."
+q39,ambiguous,claude-sonnet-4-6,calendar_list_events,true,true,4,2023,328,108,3492,0,0.003652,,"Correctly lists calendar events first to identify 'next thing'. Date range is reasonable week-long window, though a narrower 'from now' query would be more precise for finding the immediate next event."
+q40,no_tool,claude-sonnet-4-6,NONE,true,true,5,2878,332,39,3492,0,0.002629,,"Correctly answered in text without invoking any tool, matching gold NONE."
+q41,no_tool,claude-sonnet-4-6,NONE,true,true,5,10081,331,485,3492,0,0.009316,,"Pure knowledge question; model correctly answered in text with no tool call, matching gold NONE."
+q42,no_tool,claude-sonnet-4-6,NONE,true,true,5,1949,333,52,3492,0,0.002827,,"Correctly answered with text and no tool call, matching gold NONE."
+q43,no_tool,claude-sonnet-4-6,NONE,true,true,5,2304,332,69,3492,0,0.003079,,"Correctly answered from parametric knowledge without invoking any tool, as expected."
+q44,adversarial,claude-sonnet-4-6,NONE,true,true,5,3726,330,153,3492,0,0.004333,,"Correctly refused, explained unavailable tool, offered alternatives without hallucinating WHOOP."
+q45,adversarial,claude-sonnet-4-6,NONE,true,true,5,3804,328,163,3492,0,0.004477,,Correctly refused to call a tool; explained Twitter unavailable and offered Slack only as optional alternative without defaulting to it.
+q46,adversarial,claude-sonnet-4-6,slack_read_channel,true,true,3,2416,336,87,3492,0,0.003361,,"Correct tool and channel, but no time-window parameters (oldest/latest) to filter to last Tuesday before lunch; usable but coarse."
+q47,param_precision,claude-sonnet-4-6,todoist_list_projects,false,false,1,2423,332,106,3492,0,0.003634,,Model called todoist_list_projects instead of filtering tasks; no query args provided and doesn't address the user's request.
+q48,param_precision,claude-sonnet-4-6,whoop_list_sleep,true,true,4,2194,335,84,3492,0,0.003313,,"Correct tool with a 14-day range, but dates are hardcoded to mid-2025 rather than computed from today; range span is right."
+q49,param_precision,claude-sonnet-4-6,slack_read_channel,true,true,5,1867,335,75,3492,0,0.003178,,Correct tool with channel #oncall and limit=200 as specified.
+q50,param_precision,claude-sonnet-4-6,gmail_search,true,true,5,2389,339,88,3492,0,0.003385,,"Correct gmail_search with proper operators: subject:Invoice, from:stripe.com, and after: date approximately one month back."
+q01,clear_single,claude-haiku-4-5-20251001,whoop_list_recoveries,true,true,4,2416,3822,95,0,0,0.004297,,Correct tool; date range is plausible for 'last night' but uses hardcoded dates that may not reflect actual current date.
+q02,clear_single,claude-haiku-4-5-20251001,whoop_list_sleep,true,true,4,1283,3821,94,0,0,0.004291,,"Correct tool; date range spans last night but uses hardcoded 2024 dates rather than dynamic 'yesterday/today', minor flaw."
+q03,clear_single,claude-haiku-4-5-20251001,whoop_list_workouts,true,true,4,1095,3823,95,0,0,0.004298,,Correct tool with weekly date range; exact dates depend on current date but format is reasonable.
+q04,clear_single,claude-haiku-4-5-20251001,calendar_list_events,true,true,4,1043,3821,91,0,0,0.004276,,"Correct tool with today's date range, though uses date strings rather than likely expected ISO datetimes; date itself may be stale but format is reasonable."
+q05,clear_single,claude-haiku-4-5-20251001,todoist_filter_tasks,true,true,5,897,3823,57,0,0,0.004108,,Correct tool with exact filter query 'today'.
+q06,clear_single,claude-haiku-4-5-20251001,todoist_filter_tasks,true,true,5,1235,3819,58,0,0,0.004109,,Correct tool with exact 'overdue' filter query.
+q07,clear_single,claude-haiku-4-5-20251001,notion_search,true,true,5,1185,3825,57,0,0,0.004110,,Correct tool and exact query string.
+q08,clear_single,claude-haiku-4-5-20251001,gmail_search,true,true,4,1048,3823,67,0,0,0.004158,,"Correct tool with reasonable query 'Stripe invoice'; could be tighter with from:stripe.com or subject:invoice, but usable."
+q09,clear_single,claude-haiku-4-5-20251001,slack_send_message,true,true,4,1096,3826,76,0,0,0.004206,,"Correct tool and message. Channel uses 'alice' as a string; ideally would resolve to a user ID via slack_list_users, but acceptable as a direct DM target."
+q10,clear_single,claude-haiku-4-5-20251001,todoist_filter_tasks,false,false,1,1252,3826,77,0,0,0.004211,,"Model searched for the task instead of closing it. Reasonable first step to find the task id, but the user's request was to close, so wrong tool."
+q11,clear_single,claude-haiku-4-5-20251001,todoist_create_task,true,true,5,1033,3823,90,0,0,0.004273,,Correct tool with proper content and natural-language due date 'tomorrow'.
+q12,clear_single,claude-haiku-4-5-20251001,NONE,false,false,0,1655,3835,77,0,0,0.004220,,Model asked for clarification instead of creating the event. 'Friday at 2pm' is unambiguous enough to act on (next Friday); no tool call made when one was expected.
+q13,clear_single,claude-haiku-4-5-20251001,calendar_suggest_time,true,true,5,1330,3826,89,0,0,0.004271,,Correct tool with 60-minute duration and 7-day horizon matching 'this week'.
+q14,clear_single,claude-haiku-4-5-20251001,slack_read_channel,true,true,5,1012,3820,57,0,0,0.004105,,Correct tool and channel argument matches the request.
+q15,clear_single,claude-haiku-4-5-20251001,slack_list_users,true,true,4,1113,3829,56,0,0,0.004109,,"Correct tool. Passed a 'query' arg to filter by name, which is reasonable though the listed tool spec doesn't explicitly document a query parameter."
+q16,clear_single,claude-haiku-4-5-20251001,calendar_list_events,true,true,4,1538,3824,120,0,0,0.004424,,"Listing events first to find the meeting ID is acceptable. Date range covers tomorrow, though assumed date may not match actual 'tomorrow'. Reasonable parameterization."
+q17,clear_single,claude-haiku-4-5-20251001,whoop_get_body_measurement,false,false,1,1513,3823,124,0,0,0.004443,,"Body measurement returns max HR, not recent resting HR. RHR is in recovery/cycle data. Wrong tool choice."
+q18,clear_single,claude-haiku-4-5-20251001,whoop_list_cycles,true,true,4,1257,3823,95,0,0,0.004298,,"Correct tool selected. Date range covers a week but uses hardcoded Jan 2025 dates rather than actual current week; acceptable if that matches today, otherwise minor flaw."
+q19,clear_single,claude-haiku-4-5-20251001,NONE,false,false,0,2279,3820,158,0,0,0.004610,,Model declined to call notion_search despite it being the appropriate tool to list/find databases. Should have searched with an empty or broad query.
+q20,clear_single,claude-haiku-4-5-20251001,NONE,false,false,0,2031,3824,136,0,0,0.004504,,Model asked clarifying questions instead of creating the draft. Gold expected gmail_create_draft to be called; a basic draft could have been made with placeholders.
+q21,clear_single,claude-haiku-4-5-20251001,NONE,false,false,0,1619,3825,112,0,0,0.004385,,"Model asked for clarification instead of sending. While asking for spec content is reasonable, the gold expects a gmail_send_email call. No tool was invoked."
+q22,clear_single,claude-haiku-4-5-20251001,todoist_filter_tasks,false,false,1,1281,3826,89,0,0,0.004271,,"Model used filter_tasks to find the task rather than reopening it. Arguably a reasonable first step to get the ID, but does not match gold tool for reopening."
+q23,clear_single,claude-haiku-4-5-20251001,gmail_list_labels,true,true,5,917,3820,39,0,0,0.004015,,Correct tool selected with no args needed.
+q24,clear_single,claude-haiku-4-5-20251001,gmail_create_label,true,true,5,1048,3825,57,0,0,0.004110,,Correct tool with exact label name argument.
+q25,clear_single,claude-haiku-4-5-20251001,todoist_list_projects,true,true,5,1397,3821,40,0,0,0.004021,,Correct tool with no args needed.
+q26,clear_single,claude-haiku-4-5-20251001,whoop_get_body_measurement,true,true,5,836,3825,42,0,0,0.004035,,Correct tool selected; no arguments required.
+q27,clear_single,claude-haiku-4-5-20251001,slack_upload_file,true,true,5,1289,3827,79,0,0,0.004222,,Correct tool with channel and file path specified accurately.
+q28,clear_single,claude-haiku-4-5-20251001,notion_search,false,false,1,1280,3830,86,0,0,0.004260,,Model searched for the Journal page instead of creating the requested page. Reasonable preparatory step but not the expected action.
+q29,clear_single,claude-haiku-4-5-20251001,notion_search,true,true,5,1236,3830,101,0,0,0.004335,,"Searching for 'Roadmap' first to locate the page is acceptable per notes, with precise query."
+q30,clear_single,claude-haiku-4-5-20251001,todoist_list_tasks,false,false,1,1433,3831,69,0,0,0.004176,,Model called todoist_list_tasks (likely to find the task id) instead of directly creating the comment; wrong tool with empty args.
+q31,multi_tool,claude-haiku-4-5-20251001,calendar_list_events,true,true,4,1469,3827,128,0,0,0.004467,,"Correct tool (calendar first). Args cover a full day range, though actual 'tomorrow' depends on current date; date assumed reasonable but unverifiable."
+q32,multi_tool,claude-haiku-4-5-20251001,calendar_list_events,true,true,4,1455,3829,130,0,0,0.004479,,Correct tool to find next meeting. Date range is reasonable but overly broad (a month); a shorter horizon would be more efficient.
+q33,multi_tool,claude-haiku-4-5-20251001,whoop_list_recoveries,true,true,4,1205,3825,103,0,0,0.004340,,Correct tool chosen to fetch recovery before posting to Slack. Date range is plausible for 'last night' but uses hardcoded dates rather than relative to today.
+q34,multi_tool,claude-haiku-4-5-20251001,gmail_search,true,true,5,1206,3831,106,0,0,0.004361,,Correctly selected gmail_search with from:Tom and limited to latest email via max_results=1.
+q35,ambiguous,claude-haiku-4-5-20251001,whoop_list_cycles,true,true,3,2608,3820,414,0,0,0.005890,,Tool is in gold_any_of. Date range is a single day (yesterday) but uses a hardcoded 2024 date rather than dynamic; usable but coarse.
+q36,ambiguous,claude-haiku-4-5-20251001,calendar_list_events,true,true,2,1842,3819,203,0,0,0.004834,,"Tool is in gold_any_of, but 'catch me up' implies recent events (today/this week), not a two-year range. Time window is far too broad to be useful."
+q37,ambiguous,claude-haiku-4-5-20251001,gmail_search,true,true,5,1069,3822,88,0,0,0.004262,,Correctly chose gmail_search with proper 'in:inbox' query and reasonable max_results.
+q38,ambiguous,claude-haiku-4-5-20251001,NONE,false,false,0,1364,3821,70,0,0,0.004171,,Model asked for clarification instead of creating the task. A reasonable default (no due date) call to todoist_create_task was expected.
+q39,ambiguous,claude-haiku-4-5-20251001,calendar_list_events,true,true,3,1572,3819,119,0,0,0.004414,,Correct tool to list upcoming events first. Date range is reasonable but narrow (2 days) and uses hardcoded dates rather than 'now' forward; should ideally start from current time to find the next event.
+q40,no_tool,claude-haiku-4-5-20251001,NONE,true,true,5,1055,3823,40,0,0,0.004023,,"Correctly answered in text without invoking any tool, as expected."
+q41,no_tool,claude-haiku-4-5-20251001,NONE,true,true,5,3979,3822,318,0,0,0.005412,,"Pure knowledge question correctly answered with text and no tool call, matching gold NONE."
+q42,no_tool,claude-haiku-4-5-20251001,NONE,true,true,5,951,3824,35,0,0,0.003999,,"Correctly answered in text with no tool call, as expected for a creative writing request."
+q43,no_tool,claude-haiku-4-5-20251001,NONE,true,true,5,1928,3823,132,0,0,0.004483,,"Correctly answered from parametric knowledge without invoking a tool, as expected."
+q44,adversarial,claude-haiku-4-5-20251001,NONE,true,true,5,2353,3821,187,0,0,0.004756,,"Correctly refused to hallucinate a tool call for Apple Health, explained available tools, and offered alternatives."
+q45,adversarial,claude-haiku-4-5-20251001,NONE,true,true,5,2228,3819,133,0,0,0.004484,,"Correctly declined, explained Twitter unavailable, didn't fall back to Slack."
+q46,adversarial,claude-haiku-4-5-20251001,NONE,false,false,0,1476,3827,85,0,0,0.004252,,Model asked for clarification instead of calling slack_read_channel or slack_search. 'Last Tuesday before lunch' is interpretable; a tool call was expected.
+q47,param_precision,claude-haiku-4-5-20251001,todoist_filter_tasks,true,true,5,1075,3823,61,0,0,0.004128,,Correct tool with precise Todoist filter syntax combining project and label.
+q48,param_precision,claude-haiku-4-5-20251001,whoop_list_sleep,true,true,4,1227,3826,84,0,0,0.004246,,"Correct tool with 14-day range, but dates are static (Dec 2024) rather than dynamically computed from today."
+q49,param_precision,claude-haiku-4-5-20251001,slack_read_channel,true,true,5,932,3826,75,0,0,0.004201,,Correct tool with channel #oncall and limit=200 as required.
+q50,param_precision,claude-haiku-4-5-20251001,gmail_search,true,true,4,1247,3830,69,0,0,0.004175,,"Correct tool with proper Gmail operators (from:, subject:, after:). Date is approximately one month back, though exact correctness depends on current date assumption."
+q01,clear_single,gemini-2.5-pro,whoop_list_recoveries,true,true,3,5446,2655,33,0,0,0.003649,,"Correct tool. Args use a pseudo-expression 'date(today)' rather than ISO format, and range only covers today rather than including last night, but usable."
+q02,clear_single,gemini-2.5-pro,whoop_list_sleep,true,true,3,3786,2654,24,0,0,0.003558,,"Correct tool, but args use informal strings ('today','-1 day') instead of ISO dates; usable intent but not proper date format."
+q03,clear_single,gemini-2.5-pro,NONE,false,false,0,2620,2655,24,0,0,0.003559,,Model asked for clarification instead of calling whoop_list_workouts with a this-week date range.
+q04,clear_single,gemini-2.5-pro,calendar_list_events,true,true,4,2244,2655,22,0,0,0.003539,,"Correct tool; args use 'today' strings rather than ISO datetime range covering 00:00-23:59, but intent is clear and usable."
+q05,clear_single,gemini-2.5-pro,todoist_filter_tasks,true,true,5,3691,2655,18,0,0,0.003499,,Correct tool with proper 'today' filter query.
+q06,clear_single,gemini-2.5-pro,todoist_filter_tasks,true,true,5,2226,2651,19,0,0,0.003504,,Correct tool with exact 'overdue' filter query.
+q07,clear_single,gemini-2.5-pro,notion_search,true,true,5,2638,2656,18,0,0,0.003500,,Correct tool with accurate query parameter matching the user's request.
+q08,clear_single,gemini-2.5-pro,gmail_search,true,true,4,2699,2655,17,0,0,0.003489,,Correct tool; query 'Stripe invoice' is reasonable though could use from:stripe operator for precision.
+q09,clear_single,gemini-2.5-pro,NONE,false,false,0,4144,2659,14,0,0,0.003464,,"Model asked for clarification instead of calling slack_list_users or slack_send_message. Should have acted, resolving Alice via slack_list_users or attempting the DM directly."
+q10,clear_single,gemini-2.5-pro,todoist_list_tasks,false,false,1,6147,2658,13,0,0,0.003453,,"Model listed tasks instead of closing; likely a lookup step but not the required close action. Args empty, no filter for 'ship landing page'."
+q11,clear_single,gemini-2.5-pro,todoist_create_task,true,true,5,1928,2655,26,0,0,0.003579,,Correct tool with proper content and due_string='tomorrow'.
+q12,clear_single,gemini-2.5-pro,NONE,false,false,0,6933,2669,15,0,0,0.003486,,Model asked clarifying questions instead of creating the event. A reasonable default title could have been used; clarification was unnecessary for a clear single-tool request.
+q13,clear_single,gemini-2.5-pro,calendar_suggest_time,true,true,5,2892,2659,27,0,0,0.003594,,Correct tool with 60-minute duration and 7-day horizon matching 'free hour this week'.
+q14,clear_single,gemini-2.5-pro,slack_read_channel,true,true,5,1771,2653,17,0,0,0.003486,,Correct tool and channel argument matches the user's request.
+q15,clear_single,gemini-2.5-pro,slack_list_users,true,true,4,3351,2659,17,0,0,0.003494,,Correct tool selected. Used a 'query' arg to filter by name which is reasonable though the tool spec doesn't explicitly document a query param; minor arg uncertainty.
+q16,clear_single,gemini-2.5-pro,NONE,false,false,0,3131,2658,25,0,0,0.003573,,"Model asked for clarification instead of calling calendar_list_events to find tomorrow's 3pm event with Sarah, which it had enough info to do."
+q17,clear_single,gemini-2.5-pro,whoop_list_recoveries,true,true,4,6174,2656,42,0,0,0.003740,,"Correct tool for RHR data. 7-day range is reasonable for 'lately', but dates are hardcoded to 2023 rather than recent/current dates."
+q18,clear_single,gemini-2.5-pro,NONE,false,false,0,4373,2657,18,0,0,0.003501,,User clearly specified 'this week'; model should have called whoop_list_cycles with a week date range instead of asking for clarification.
+q19,clear_single,gemini-2.5-pro,NONE,false,false,0,4357,2652,37,0,0,0.003685,,"Model refused instead of calling notion_search, which can surface databases. Should have searched Notion."
+q20,clear_single,gemini-2.5-pro,NONE,false,false,0,3699,2657,29,0,0,0.003611,,Model asked for clarification instead of calling gmail_create_draft. Could have created a draft with reasonable defaults; clarification not strictly required for a draft.
+q21,clear_single,gemini-2.5-pro,NONE,false,false,0,3863,2657,20,0,0,0.003521,,"User explicitly asked to send email; model should have called gmail_send_email (possibly asking for body via args or with attachment), but produced text reply instead."
+q22,clear_single,gemini-2.5-pro,NONE,false,false,0,3777,2656,24,0,0,0.003560,,Model declined to call todoist_reopen_task; should have attempted to find/reopen the task instead of asking for ID.
+q23,clear_single,gemini-2.5-pro,gmail_list_labels,true,true,5,5259,2653,12,0,0,0.003436,,Correct tool with no args needed.
+q24,clear_single,gemini-2.5-pro,gmail_create_label,true,true,5,2116,2656,17,0,0,0.003490,,Correct tool with exact label name.
+q25,clear_single,gemini-2.5-pro,todoist_list_projects,true,true,5,1889,2653,13,0,0,0.003446,,Correct tool with no args needed.
+q26,clear_single,gemini-2.5-pro,whoop_get_body_measurement,true,true,5,2092,2657,15,0,0,0.003471,,Correct tool with no args needed.
+q27,clear_single,gemini-2.5-pro,slack_upload_file,true,true,5,3003,2660,26,0,0,0.003585,,Correct tool with both file path and target channel specified accurately.
+q28,clear_single,gemini-2.5-pro,notion_search,false,false,1,4636,2661,31,0,0,0.003636,,Model searched for Journal page instead of creating the new page directly; wrong tool but args are reasonable as a precursor step.
+q29,clear_single,gemini-2.5-pro,notion_search,true,true,5,5721,2661,17,0,0,0.003496,,Searching for 'Roadmap' is an accepted first step to locate the page before updating; query is precise.
+q30,clear_single,gemini-2.5-pro,todoist_list_tasks,false,false,1,3946,2662,41,0,0,0.003737,,"Model chose todoist_list_tasks instead of todoist_create_comment. While listing tasks could be a precursor to find the task id, the prompt directly requested adding a comment."
+q31,multi_tool,gemini-2.5-pro,calendar_list_events,true,true,5,9664,2660,92,0,0,0.004245,,Correctly called calendar_list_events first with a full-day range for tomorrow before composing the email.
+q32,multi_tool,gemini-2.5-pro,calendar_list_events,true,true,4,7930,2660,60,0,0,0.003925,,"Correct tool to find next meeting. Date range is reasonable week-long window, though a narrower upcoming-only range from now would be slightly better."
+q33,multi_tool,gemini-2.5-pro,whoop_list_recoveries,true,true,3,5064,2657,42,0,0,0.003741,,"Correct tool chosen; date range is stale/hardcoded rather than last night, but structure is usable."
+q34,multi_tool,gemini-2.5-pro,gmail_search,true,true,5,8981,2664,24,0,0,0.003570,,Correct tool choice; query 'from:Tom' with max_results=1 retrieves the latest email from Tom as needed.
+q35,ambiguous,gemini-2.5-pro,calendar_list_events,true,true,4,19984,2653,60,0,0,0.003916,,"Correct tool for ambiguous 'yesterday' query. Date range covers full day, but hardcoded date may not reflect actual yesterday relative to current date."
+q36,ambiguous,gemini-2.5-pro,gmail_search,true,true,4,13113,2651,27,0,0,0.003584,,"Chose a defensible gold option (gmail_search) with a reasonable unread/important query; minor: 'catch me up' is vague, could include newer:1d, but args are sensible."
+q37,ambiguous,gemini-2.5-pro,gmail_search,true,true,5,2426,2656,18,0,0,0.003500,,Correctly chose gmail_search with appropriate 'label:inbox' query to show inbox contents.
+q38,ambiguous,gemini-2.5-pro,NONE,false,false,0,6568,2654,8,0,0,0.003398,,Model asked for clarification instead of creating a task. 'Remind me to call mom' is a natural task creation request; todoist_create_task with content='Call mom' was expected.
+q39,ambiguous,gemini-2.5-pro,NONE,false,false,0,6099,2652,19,0,0,0.003505,,Model asked for clarification instead of listing upcoming events to identify the next one. Should have called calendar_list_events to find the next event.
+q40,no_tool,gemini-2.5-pro,NONE,true,true,5,2162,2656,2,0,0,0.003340,,Correctly answered in text without calling any tool.
+q41,no_tool,gemini-2.5-pro,NONE,true,true,5,6634,2652,191,0,0,0.005225,,"Correctly answered knowledge question with text, no tool call needed."
+q42,no_tool,gemini-2.5-pro,NONE,true,true,5,2641,2655,20,0,0,0.003519,,"Correctly answered with text and no tool call, as expected for a creative request."
+q43,no_tool,gemini-2.5-pro,NONE,true,true,4,5259,2655,13,0,0,0.003449,,Correctly refrained from calling a tool. Reply is safe but overly restrictive—could have answered from parametric knowledge (Dario Amodei).
+q44,adversarial,gemini-2.5-pro,NONE,true,true,5,3892,2654,23,0,0,0.003548,,"Correctly refused, clarified Apple Health unavailable, offered WHOOP alternatives without hallucinating a call."
+q45,adversarial,gemini-2.5-pro,NONE,true,true,5,3042,2652,36,0,0,0.003675,,Correctly declined; no tool called and explained lack of Twitter access without falling back to Slack.
+q46,adversarial,gemini-2.5-pro,NONE,false,false,0,3202,2659,41,0,0,0.003734,,Model asked a clarifying question instead of calling slack_read_channel or slack_search. A tool call was expected.
+q47,param_precision,gemini-2.5-pro,todoist_filter_tasks,true,true,5,3833,2656,21,0,0,0.003530,,Correct tool and precise filter query combining project and label.
+q48,param_precision,gemini-2.5-pro,whoop_list_sleep,true,true,4,3213,2658,41,0,0,0.003733,,"Correct tool with 14-day range, but dates are hardcoded to April/May 2024 rather than relative to today, which may not match current date."
+q49,param_precision,gemini-2.5-pro,slack_read_channel,true,true,5,2548,2660,25,0,0,0.003575,,Correct tool with channel #oncall and limit=200 as required.
+q50,param_precision,gemini-2.5-pro,gmail_search,true,true,4,5701,2662,34,0,0,0.003667,,"Correct tool and proper Gmail operators (subject:, from:, after:). The after: date is hardcoded/stale rather than computed from current date, but structure is right."
+q01,clear_single,gemini-2.5-flash,NONE,false,false,0,2670,2655,18,0,0,0.000273,,"Model failed to call whoop_list_recoveries despite clear request; 'last night' implies yesterday's date range, which the model could have inferred."
+q02,clear_single,gemini-2.5-flash,whoop_list_sleep,true,true,4,1697,2654,29,0,0,0.000277,,"Correct tool; date range targets yesterday which covers last night's sleep, though a sleep session spanning yesterday evening to this morning might ideally include today too."
+q03,clear_single,gemini-2.5-flash,NONE,false,false,0,2550,2655,0,0,0,0.000266,,Model failed to call whoop_list_workouts when the user clearly requested workouts from this week.
+q04,clear_single,gemini-2.5-flash,calendar_list_events,true,true,4,1414,2655,22,0,0,0.000274,,"Correct tool; args use 'today' shorthand instead of explicit ISO datetime range, but intent is clear and likely usable."
+q05,clear_single,gemini-2.5-flash,todoist_filter_tasks,true,true,5,912,2655,18,0,0,0.000273,,Correctly used todoist_filter_tasks with query 'today'.
+q06,clear_single,gemini-2.5-flash,NONE,false,false,0,1146,2651,0,0,0,0.000265,,Model failed to call any tool when todoist_filter_tasks with query 'overdue' was expected.
+q07,clear_single,gemini-2.5-flash,NONE,false,false,0,1167,2656,0,0,0,0.000266,,Model made no tool call when notion_search was clearly expected.
+q08,clear_single,gemini-2.5-flash,gmail_search,true,true,4,1563,2655,17,0,0,0.000272,,Correct tool and reasonable query; could be more precise with 'from:stripe' or 'subject:invoice' operators but 'Stripe invoice' works.
+q09,clear_single,gemini-2.5-flash,slack_list_users,false,false,1,2567,2659,17,0,0,0.000273,,Model chose slack_list_users to look up Alice instead of directly sending the DM. Reasonable preparatory step but not the gold tool.
+q10,clear_single,gemini-2.5-flash,todoist_filter_tasks,false,false,1,1777,2658,20,0,0,0.000274,,"Model searched for the task rather than closing it. While finding task ID first is reasonable, the user explicitly asked to mark it done; gold expects todoist_close_task directly."
+q11,clear_single,gemini-2.5-flash,todoist_create_task,true,true,5,1640,2655,26,0,0,0.000276,,Correct tool with proper content and natural language due_string 'tomorrow'.
+q12,clear_single,gemini-2.5-flash,NONE,false,false,0,3351,2669,25,0,0,0.000277,,Model asked for clarification instead of calling calendar_create_event. Title could default and Friday is unambiguously the upcoming Friday at 2pm for 30 min.
+q13,clear_single,gemini-2.5-flash,calendar_suggest_time,true,true,5,1584,2659,27,0,0,0.000277,,Correct tool with 60-minute duration and 7-day horizon matching 'free hour this week'.
+q14,clear_single,gemini-2.5-flash,slack_read_channel,true,true,5,1433,2653,17,0,0,0.000272,,Correct tool and channel argument specified.
+q15,clear_single,gemini-2.5-flash,slack_list_users,true,true,4,1417,2659,17,0,0,0.000273,,Correct tool. Passed a query arg not in schema but intent clear; minor arg flaw.
+q16,clear_single,gemini-2.5-flash,NONE,false,false,0,1843,2658,31,0,0,0.000278,,"Model asked clarifying question instead of calling calendar_list_events to find the event, which would have been the natural first step."
+q17,clear_single,gemini-2.5-flash,NONE,false,false,0,2707,2656,31,0,0,0.000278,,"Model asked a clarifying question instead of calling whoop_list_recoveries, which would directly answer the RHR trend query."
+q18,clear_single,gemini-2.5-flash,NONE,false,false,0,5209,2657,21,0,0,0.000274,,Model failed to call whoop_list_cycles; asked for clarification instead of inferring this week's date range.
+q19,clear_single,gemini-2.5-flash,notion_search,true,true,3,1591,2652,16,0,0,0.000272,,"Correct tool. Query 'database' is a reasonable but coarse attempt; ideally would filter by object type database rather than keyword search, but usable."
+q20,clear_single,gemini-2.5-flash,NONE,false,false,0,1766,2657,16,0,0,0.000272,,"Model asked for clarification instead of calling gmail_create_draft. It could have created a draft with placeholder content, since drafts are not sent."
+q21,clear_single,gemini-2.5-flash,NONE,false,false,0,1562,2657,16,0,0,0.000272,,"User explicitly said to send the email now; model should have called gmail_send_email (perhaps asking for body inline), but instead replied in text with no tool call."
+q22,clear_single,gemini-2.5-flash,NONE,false,false,0,1454,2656,16,0,0,0.000272,,Model asked for task ID instead of calling todoist_reopen_task (could have looked up task first). No tool invoked when one was expected.
+q23,clear_single,gemini-2.5-flash,NONE,false,false,0,1101,2653,0,0,0,0.000265,,Model made no tool call when gmail_list_labels was clearly expected.
+q24,clear_single,gemini-2.5-flash,NONE,false,false,0,1145,2656,0,0,0,0.000266,,Model failed to call gmail_create_label with name 'Investors' as expected.
+q25,clear_single,gemini-2.5-flash,NONE,false,false,0,1153,2653,0,0,0,0.000265,,Model failed to call todoist_list_projects; no tool invoked when one was clearly expected.
+q26,clear_single,gemini-2.5-flash,whoop_get_body_measurement,true,true,5,1371,2657,15,0,0,0.000272,,Correct tool selected; no args required.
+q27,clear_single,gemini-2.5-flash,slack_upload_file,true,true,5,1537,2660,26,0,0,0.000276,,Correct tool with accurate channel and file path arguments.
+q28,clear_single,gemini-2.5-flash,NONE,false,false,0,2023,2661,23,0,0,0.000275,,Model declined to call the tool and asked for parent ID instead; could have searched for Journal page or attempted creation with title-based parent.
+q29,clear_single,gemini-2.5-flash,notion_search,true,true,5,1751,2661,17,0,0,0.000273,,Search first for 'Roadmap' is an accepted path; query parameter is precise and appropriate.
+q30,clear_single,gemini-2.5-flash,NONE,false,false,0,2269,2662,40,0,0,0.000282,,Model asked for clarification instead of calling a tool. Could have searched/listed tasks or attempted the comment call. No tool invoked when one was expected.
+q31,multi_tool,gemini-2.5-flash,calendar_list_events,true,true,4,2334,2660,58,0,0,0.000289,,"Correct first tool (calendar_list_events) with a full-day range for 'tomorrow'. Date is hardcoded rather than relative, but otherwise well-formed."
+q32,multi_tool,gemini-2.5-flash,NONE,false,false,0,4558,2660,45,0,0,0.000284,,Model should have called calendar_list_events to find the next meeting instead of asking the user.
+q33,multi_tool,gemini-2.5-flash,NONE,false,false,0,2605,2657,27,0,0,0.000276,,Model asked for clarification instead of fetching recovery data. 'Last night' is clear enough to call whoop_list_recoveries for yesterday.
+q34,multi_tool,gemini-2.5-flash,NONE,false,false,0,3492,2664,32,0,0,0.000279,,"Model asked for clarification instead of searching Gmail for Tom's latest email, which was the expected first step."
+q35,ambiguous,gemini-2.5-flash,NONE,false,false,0,2141,2653,13,0,0,0.000271,,Ambiguous prompt; gold expects a tool call (most commonly calendar_list_events). Model asked for clarification instead of calling any tool.
+q36,ambiguous,gemini-2.5-flash,NONE,false,false,0,1878,2651,21,0,0,0.000274,,Model asked clarifying question instead of picking a defensible source. Gold expected one of gmail_search/slack_read_channel/calendar_list_events.
+q37,ambiguous,gemini-2.5-flash,gmail_search,true,true,5,1474,2656,18,0,0,0.000273,,Correctly chose gmail_search with appropriate 'in:inbox' query operator.
+q38,ambiguous,gemini-2.5-flash,todoist_create_task,true,true,4,1348,2654,19,0,0,0.000273,,"Correct tool and content. No due date/priority specified, which is acceptable since user didn't provide one, though a default reminder time could be argued."
+q39,ambiguous,gemini-2.5-flash,NONE,false,false,0,1582,2652,37,0,0,0.000280,,Model asked for clarification instead of listing upcoming events to identify the next one. Should have called calendar_list_events first.
+q40,no_tool,gemini-2.5-flash,NONE,true,true,5,1265,2656,8,0,0,0.000269,,"Correctly answered in text without invoking any tool, matching the NONE gold."
+q41,no_tool,gemini-2.5-flash,NONE,true,true,5,2526,2652,34,0,0,0.000279,,"Correctly refrained from calling a tool for a pure knowledge question, matching gold NONE."
+q42,no_tool,gemini-2.5-flash,NONE,true,true,5,1049,2655,24,0,0,0.000275,,Correctly answered with text and no tool call for creative writing task.
+q43,no_tool,gemini-2.5-flash,NONE,true,true,3,987,2655,9,0,0,0.000269,,"Correctly refrained from tool use for parametric question, though reply was unhelpfully evasive since Dario Amodei is well-known public info."
+q44,adversarial,gemini-2.5-flash,NONE,true,true,5,3887,2654,18,0,0,0.000273,,"Correctly refused, acknowledging no Apple Health access without hallucinating WHOOP."
+q45,adversarial,gemini-2.5-flash,NONE,true,true,5,1411,2652,32,0,0,0.000278,,"Correctly declined; no tool called, no Slack fallback."
+q46,adversarial,gemini-2.5-flash,NONE,false,false,0,1810,2659,16,0,0,0.000272,,Model refused instead of calling slack_read_channel or slack_search on #product channel as expected.
+q47,param_precision,gemini-2.5-flash,todoist_filter_tasks,true,true,5,1357,2656,21,0,0,0.000274,,Correct tool and filter query combining project and label.
+q48,param_precision,gemini-2.5-flash,NONE,false,false,0,2101,2658,0,0,0,0.000266,,Model made no tool call when whoop_list_sleep with a 14-day date range was clearly required.
+q49,param_precision,gemini-2.5-flash,NONE,false,false,0,1133,2660,0,0,0,0.000266,,Model failed to call any tool; slack_read_channel with limit=200 was expected.
+q50,param_precision,gemini-2.5-flash,gmail_search,true,true,4,2304,2662,34,0,0,0.000280,,"Correct tool with proper Gmail operators (subject:, from:, after:). Date is hardcoded to 2023/09/26 which may not reflect actual 'last month' relative to current date, minor flaw."
+q01,clear_single,gpt-4o,whoop_list_recoveries,true,true,3,999,1609,33,0,0,0.004353,,Correct tool. Date range is a single day but likely stale (2023) rather than relative to now; args usable but not ideal.
+q02,clear_single,gpt-4o,whoop_list_sleep,true,true,4,831,72,31,1536,0,0.002410,,Correct tool. Date range covers a single day but uses a hardcoded past date rather than actual last night; range should likely span previous evening to morning.
+q03,clear_single,gpt-4o,whoop_list_workouts,true,true,4,909,1609,32,0,0,0.004343,,"Correct tool with a weekly date range, but the specific dates appear arbitrary/not tied to current week; structure is right."
+q04,clear_single,gpt-4o,calendar_list_events,true,true,4,949,71,41,1536,0,0.002508,,"Correct tool with proper today date range, though the specific date is hardcoded to 2023-10-11 which may not reflect actual current date."
+q05,clear_single,gpt-4o,todoist_filter_tasks,true,true,5,742,73,16,1536,0,0.002263,,Correct tool with exact 'today' filter query.
+q06,clear_single,gpt-4o,todoist_filter_tasks,true,true,5,853,1605,17,0,0,0.004183,,Correct tool with exact 'overdue' filter query.
+q07,clear_single,gpt-4o,notion_search,true,true,5,776,75,17,1536,0,0.002278,,Correct tool with appropriate query string 'Q2 plan'.
+q08,clear_single,gpt-4o,gmail_search,true,true,4,687,73,15,1536,0,0.002253,,Correct tool; query 'Stripe invoice' is reasonable but could use from:stripe or subject:invoice operators for precision.
+q09,clear_single,gpt-4o,slack_list_users,false,false,1,967,75,16,1536,0,0.002267,,Model chose slack_list_users to resolve Alice's user ID instead of directly sending the DM. Reasonable preliminary step but not the gold tool; args are parseable.
+q10,clear_single,gpt-4o,todoist_list_tasks,false,false,1,765,76,12,1536,0,0.002230,,"Model listed tasks instead of closing; reasonable as a lookup step to find task id, but not the requested action and no args provided."
+q11,clear_single,gpt-4o,todoist_create_task,true,true,5,798,73,23,1536,0,0.002333,,Correct tool with proper content and natural-language due date.
+q12,clear_single,gpt-4o,calendar_create_event,true,true,4,843,1620,57,0,0,0.004620,,"Correct tool with proper duration, attendee, and 2pm start. Date may not be the actual upcoming Friday but format and structure are correct."
+q13,clear_single,gpt-4o,calendar_suggest_time,true,true,5,704,77,23,1536,0,0.002343,,Correct tool with 60-minute duration and 7-day horizon matching 'free hour this week'.
+q14,clear_single,gpt-4o,slack_read_channel,true,true,5,771,71,17,1536,0,0.002267,,Correct tool and channel argument specified.
+q15,clear_single,gpt-4o,slack_list_users,true,true,4,818,78,17,1536,0,0.002285,,"Correct tool. Passed a 'query' arg for filtering by name, which is reasonable though slack_list_users may not formally accept a query param; intent captured well."
+q16,clear_single,gpt-4o,calendar_list_events,true,true,4,893,75,41,1536,0,0.002517,,"Correctly lists tomorrow's events to find the meeting before deleting. Date range covers the full day, though the specific date assumed depends on current date; otherwise reasonable parameterization."
+q17,clear_single,gpt-4o,NONE,false,false,0,1335,72,59,1536,0,0.002690,,Model asked for clarification instead of calling whoop_list_recoveries with a reasonable default range like the past week.
+q18,clear_single,gpt-4o,whoop_list_cycles,true,true,4,800,73,31,1536,0,0.002413,,"Correct tool selected. Date range covers a week but uses a hardcoded 2023 date instead of current week, minor flaw."
+q19,clear_single,gpt-4o,notion_search,true,true,3,797,71,15,1536,0,0.002247,,Correct tool. Empty query may list all but lacks filter for databases specifically; usable but coarse.
+q20,clear_single,gpt-4o,NONE,false,false,0,1177,75,43,1536,0,0.002537,,Model asked for clarification instead of drafting. Could have created a draft with reasonable defaults or placeholder fields; no tool call made when one was expected.
+q21,clear_single,gpt-4o,NONE,false,false,0,960,74,18,1536,0,0.002285,,User explicitly said send; model should have called gmail_send_email (even with placeholder body or asked via draft). Instead replied in text with no tool call.
+q22,clear_single,gpt-4o,todoist_list_tasks,false,false,1,1029,74,12,1536,0,0.002225,,"Model called todoist_list_tasks with no args instead of todoist_reopen_task. Likely intended to find the task first, but this doesn't match gold tool."
+q23,clear_single,gpt-4o,gmail_list_labels,true,true,5,1152,71,11,1536,0,0.002207,,Correct tool with no args needed.
+q24,clear_single,gpt-4o,gmail_create_label,true,true,5,919,75,16,1536,0,0.002267,,Correct tool with exact label name argument.
+q25,clear_single,gpt-4o,todoist_list_projects,true,true,5,820,71,12,1536,0,0.002217,,Correct tool selected with no args needed for listing all projects.
+q26,clear_single,gpt-4o,whoop_get_body_measurement,true,true,5,954,75,15,1536,0,0.002257,,Correct tool selected; no args needed.
+q27,clear_single,gpt-4o,slack_upload_file,true,true,5,764,77,25,1536,0,0.002363,,Correct tool with accurate channel and file path arguments.
+q28,clear_single,gpt-4o,NONE,false,false,0,784,80,29,1536,0,0.002410,,Model asked for clarification instead of calling notion_create_page (or notion_search to find the Journal parent). A tool call was expected.
+q29,clear_single,gpt-4o,notion_search,true,true,5,734,78,16,1536,0,0.002275,,Search first with query 'Roadmap' is an acceptable approach to locate the page before updating.
+q30,clear_single,gpt-4o,todoist_list_tasks,false,false,1,726,80,12,1536,0,0.002240,,"Model called todoist_list_tasks instead of todoist_create_comment. While listing tasks might be a precursor to find the task ID, the direct action requested was commenting, and no args were provided."
+q31,multi_tool,gpt-4o,calendar_list_events,true,true,4,747,77,41,1536,0,0.002523,,"Correct tool chosen first; date range covers a single day but uses a hardcoded 2023 date rather than actual tomorrow, minor flaw."
+q32,multi_tool,gpt-4o,calendar_list_events,true,true,3,1123,78,41,1536,0,0.002525,,"Correct tool to find next meeting, but date range uses a hardcoded past date (2023) and only covers one day rather than looking forward from now."
+q33,multi_tool,gpt-4o,whoop_list_recoveries,true,true,3,944,75,33,1536,0,0.002437,,"Correct tool chosen first to fetch recovery before Slacking. Date range uses a hardcoded 2023 date rather than last night/today, so args are coarse but usable structurally."
+q34,multi_tool,gpt-4o,gmail_search,true,true,5,1087,82,60,1536,0,0.002725,,Correctly called gmail_search with from:tom and limited to latest (max_results:1) to find Tom's most recent email before replying and creating event.
+q35,ambiguous,gpt-4o,whoop_list_workouts,true,true,3,1441,71,122,1536,0,0.003318,,"Tool is in gold_any_of. Date range covers only one day but uses a hardcoded 2023 date rather than actual yesterday, making it likely incorrect relative to current date."
+q36,ambiguous,gpt-4o,NONE,false,false,0,834,69,40,1536,0,0.002493,,Gold expected a tool call (any of gmail/slack/calendar); model asked for clarification instead of picking a defensible default.
+q37,ambiguous,gpt-4o,gmail_search,true,true,5,870,72,22,1536,0,0.002320,,"Correctly chose gmail_search with in:inbox query, which is the precise Gmail operator to show inbox contents."
+q38,ambiguous,gpt-4o,NONE,false,false,0,695,72,13,1536,0,0.002230,,Model asked for clarification instead of creating a task. A reasonable default would be todoist_create_task with content 'Call mom'; clarifying time is acceptable but no tool was called.
+q39,ambiguous,gpt-4o,calendar_list_events,true,true,3,2389,1606,41,0,0,0.004425,,"Correct tool to list events first. Args use a fixed past date and only one day window, which is too narrow and not 'now-forward', but usable as a starting query."
+q40,no_tool,gpt-4o,NONE,true,true,5,705,72,9,1536,0,0.002190,,"Correctly answered in text with no tool call, as expected for a trivial arithmetic question."
+q41,no_tool,gpt-4o,NONE,true,true,5,1815,71,148,1536,0,0.003577,,"Correctly answered in text without calling any tool, matching gold NONE."
+q42,no_tool,gpt-4o,NONE,true,true,5,1108,73,23,1536,0,0.002333,,"Correctly answered with text and no tool call, as Gold expected NONE."
+q43,no_tool,gpt-4o,NONE,true,true,5,787,73,20,1536,0,0.002303,,"Correctly answered from parametric knowledge without invoking a tool, matching gold NONE."
+q44,adversarial,gpt-4o,NONE,true,true,5,791,72,28,1536,0,0.002380,,Correctly refused; Apple Health is not in toolset and model did not hallucinate a WHOOP call.
+q45,adversarial,gpt-4o,NONE,true,true,5,1498,70,33,1536,0,0.002425,,Correctly declined; no tool exists for Twitter and avoided Slack fallback.
+q46,adversarial,gpt-4o,NONE,false,false,0,940,77,28,1536,0,0.002393,,Model asked for clarification instead of calling slack_read_channel or slack_search; 'last Tuesday' is resolvable without user input.
+q47,param_precision,gpt-4o,todoist_list_projects,false,false,1,705,1610,12,0,0,0.004145,,Model called todoist_list_projects instead of filtering tasks; wrong tool and no useful args for the requested @urgent #Work query.
+q48,param_precision,gpt-4o,whoop_list_sleep,true,true,4,1196,75,31,1536,0,0.002417,,"Correct tool with 14-day range, but dates are in 2023 rather than current date, indicating stale date assumption."
+q49,param_precision,gpt-4o,slack_read_channel,true,true,5,736,1612,22,0,0,0.004250,,Correct tool with channel=#oncall and limit=200 as specified.
+q50,param_precision,gpt-4o,gmail_search,true,true,4,992,79,33,1536,0,0.002448,,"Correct tool with proper Gmail operators (subject:, from:, after:). Date may be stale relative to 'last month', and max_results=1 is overly restrictive for a listing query."
+q01,clear_single,gpt-4o-mini,whoop_list_recoveries,true,true,3,1896,1609,33,0,0,0.000261,,Correct tool. Date range is a single day but uses a hardcoded 2023 date instead of last night relative to now; range should likely span yesterday-today to capture last night's recovery.
+q02,clear_single,gpt-4o-mini,whoop_list_sleep,true,true,3,1254,1608,31,0,0,0.000260,,"Correct tool chosen. Date range is a single day but uses a hardcoded 2023 date rather than actual 'last night', and may miss sleep spanning previous evening."
+q03,clear_single,gpt-4o-mini,whoop_list_workouts,true,true,4,1094,73,32,1536,0,0.000145,,"Correct tool with week-long date range, but dates are hardcoded to 2023 instead of current week, which may not reflect actual 'this week'."
+q04,clear_single,gpt-4o-mini,calendar_list_events,true,true,4,1191,71,43,1536,0,0.000152,,"Correct tool with a today date range; date used is hardcoded rather than dynamic 'today', but structure is appropriate."
+q05,clear_single,gpt-4o-mini,todoist_filter_tasks,true,true,5,1579,73,16,1536,0,0.000136,,Correctly used todoist_filter_tasks with 'today' query.
+q06,clear_single,gpt-4o-mini,todoist_filter_tasks,true,true,5,1814,69,17,1536,0,0.000136,,Correct tool with exact filter query 'overdue'.
+q07,clear_single,gpt-4o-mini,notion_search,true,true,5,1216,1611,17,0,0,0.000252,,Correct tool and query matches user request exactly.
+q08,clear_single,gpt-4o-mini,gmail_search,true,true,4,767,73,15,1536,0,0.000135,,"Correct tool. Query 'Stripe invoice' is reasonable; could be tighter with from:stripe or subject:invoice, but acceptable."
+q09,clear_single,gpt-4o-mini,slack_send_message,true,true,4,1021,75,23,1536,0,0.000140,,Correct tool and message. Channel 'alice' is a reasonable proxy but ideally would resolve to a user DM id via slack_list_users; minor arg imprecision.
+q10,clear_single,gpt-4o-mini,todoist_filter_tasks,false,false,1,987,76,18,1536,0,0.000137,,"Model searched for the task instead of closing it. Arguably a reasonable first step to find the task id, but the gold expects a direct close action."
+q11,clear_single,gpt-4o-mini,todoist_create_task,true,true,5,1199,73,23,1536,0,0.000140,,Correct tool with proper content and natural-language due date 'tomorrow'.
+q12,clear_single,gpt-4o-mini,calendar_create_event,true,true,4,1825,84,57,1536,0,0.000162,,"Correct tool with proper title, duration, and attendee. Date chosen (2023-11-10) is a Friday but may not reflect actual upcoming Friday; minor date ambiguity."
+q13,clear_single,gpt-4o-mini,calendar_suggest_time,true,true,5,924,77,23,1536,0,0.000141,,Correct tool with 60-minute duration and 7-day horizon matching 'this week'.
+q14,clear_single,gpt-4o-mini,slack_read_channel,true,true,5,833,71,17,1536,0,0.000136,,Correct tool selected with appropriate channel argument.
+q15,clear_single,gpt-4o-mini,slack_list_users,true,true,4,2832,78,17,1536,0,0.000137,,"Correct tool. Passed a query arg 'marco' which isn't in the documented schema (list_users has no filter), but intent is clear and usable."
+q16,clear_single,gpt-4o-mini,calendar_list_events,true,true,4,1243,75,41,1536,0,0.000151,,"Correctly chose to list tomorrow's events to find the meeting before deleting. Date range covers full day, but uses a hardcoded date rather than dynamic 'tomorrow'."
+q17,clear_single,gpt-4o-mini,whoop_list_recoveries,true,true,3,1188,72,33,1536,0,0.000146,,"Correct tool choice. Date range uses a fixed month in 2023 rather than 'lately' (e.g., last 7-14 days from today), so args are usable but coarse and likely stale."
+q18,clear_single,gpt-4o-mini,whoop_list_cycles,true,true,4,1542,73,31,1536,0,0.000145,,"Correct tool. Date range covers a week but uses a hardcoded 2023 date rather than current week, which may be stale."
+q19,clear_single,gpt-4o-mini,notion_search,true,true,3,872,1607,15,0,0,0.000250,,"Correct tool. Query 'database' is a reasonable but imperfect approach; ideally filter by object type=database rather than keyword search, which may miss databases not named 'database'."
+q20,clear_single,gpt-4o-mini,gmail_create_draft,true,true,4,2328,75,85,1536,0,0.000177,,"Correct tool (create_draft, not send). Recipient is a placeholder since team address wasn't specified, but subject and body appropriately address Friday demo."
+q21,clear_single,gpt-4o-mini,gmail_send_email,true,true,4,1189,74,36,1536,0,0.000148,,Correct tool and recipient. Subject and body are reasonable placeholders but 'the spec' likely refers to a specific document/attachment not included; minor content assumption.
+q22,clear_single,gpt-4o-mini,todoist_filter_tasks,false,false,1,972,74,17,1536,0,0.000136,,"Model searched for the task instead of reopening it. Could be a reasonable first step to find task ID, but gold expects direct reopen call."
+q23,clear_single,gpt-4o-mini,gmail_list_labels,true,true,5,679,71,11,1536,0,0.000132,,Correct tool with no args needed.
+q24,clear_single,gpt-4o-mini,gmail_create_label,true,true,5,778,75,16,1536,0,0.000136,,Correct tool and exact label name.
+q25,clear_single,gpt-4o-mini,todoist_list_projects,true,true,5,1060,71,12,1536,0,0.000133,,Correct tool with no args needed.
+q26,clear_single,gpt-4o-mini,whoop_get_body_measurement,true,true,5,824,75,15,1536,0,0.000135,,Correct tool selected; no arguments needed for this endpoint.
+q27,clear_single,gpt-4o-mini,slack_upload_file,true,true,5,1269,77,25,1536,0,0.000142,,Correct tool with channel and file path correctly specified.
+q28,clear_single,gpt-4o-mini,notion_search,false,false,1,939,80,15,1536,0,0.000136,,Model chose notion_search to find the Journal parent instead of directly creating the page. Reasonable preliminary step but not the gold tool.
+q29,clear_single,gpt-4o-mini,notion_search,true,true,5,864,78,16,1536,0,0.000136,,Search first to locate the Roadmap page is acceptable per notes; query arg is precise.
+q30,clear_single,gpt-4o-mini,todoist_filter_tasks,false,false,1,1091,80,18,1536,0,0.000138,,"Model searched for the task first instead of creating the comment directly; wrong tool selected, though args are reasonable for the lookup step."
+q31,multi_tool,gpt-4o-mini,calendar_list_events,true,true,4,1047,77,43,1536,0,0.000153,,Correctly chose calendar_list_events first with a full-day range for 'tomorrow'. Date depends on current day assumption; format and scope are reasonable.
+q32,multi_tool,gpt-4o-mini,calendar_list_events,true,true,3,1572,78,43,1536,0,0.000153,,"Correct tool to find next meeting. Date range is hardcoded to a past date rather than from now forward, but covers a one-day window which is reasonable in spirit."
+q33,multi_tool,gpt-4o-mini,whoop_list_recoveries,true,true,3,1850,75,33,1536,0,0.000146,,"Correct tool selected to fetch recovery first. Date range is a hardcoded 2023 date rather than last night/today, so args are usable but not accurate."
+q34,multi_tool,gpt-4o-mini,gmail_search,true,true,5,893,82,21,1536,0,0.000140,,Correctly chose gmail_search with from:Tom and limited to latest result.
+q35,ambiguous,gpt-4o-mini,whoop_list_workouts,true,true,3,2070,71,110,1536,0,0.000192,,"Tool is in gold_any_of. Args use a fixed 2023 date rather than actual yesterday, so date range is likely wrong but structurally correct."
+q36,ambiguous,gpt-4o-mini,slack_read_channel,true,true,3,2624,69,103,1536,0,0.000187,,Picked a defensible source for 'catch me up'. Args are reasonable defaults but channel was assumed without user input; limit is small but usable.
+q37,ambiguous,gpt-4o-mini,gmail_search,true,true,5,938,1608,22,0,0,0.000254,,Correctly chose gmail_search with in:inbox query and reasonable max_results.
+q38,ambiguous,gpt-4o-mini,todoist_create_task,true,true,4,924,72,17,1536,0,0.000136,,"Correct tool with appropriate content; no due date specified but user didn't provide one, so minor omission of optional reminder time."
+q39,ambiguous,gpt-4o-mini,calendar_list_events,true,true,3,1572,70,43,1536,0,0.000151,,"Correct tool to list events first before cancellation. Date range is hardcoded to a past date rather than 'now' forward, but the approach is usable."
+q40,no_tool,gpt-4o-mini,NONE,true,true,5,757,72,9,1536,0,0.000131,,"Correctly answered in text without invoking any tool, as expected."
+q41,no_tool,gpt-4o-mini,NONE,true,true,5,6707,71,245,1536,0,0.000273,,Correctly answered with text reply and no tool call for a pure knowledge question.
+q42,no_tool,gpt-4o-mini,NONE,true,true,5,977,73,23,1536,0,0.000140,,"Correctly answered with text only, no tool call needed for creative writing request."
+q43,no_tool,gpt-4o-mini,NONE,true,true,5,850,73,13,1536,0,0.000134,,"Correctly answered from parametric knowledge without invoking a tool, matching gold NONE."
+q44,adversarial,gpt-4o-mini,NONE,true,true,5,1622,1608,51,0,0,0.000272,,Correctly refused since Apple Health is not in the toolset; clarified available tools without hallucinating WHOOP.
+q45,adversarial,gpt-4o-mini,NONE,true,true,5,1059,70,26,1536,0,0.000141,,Correctly declined to call any tool since Twitter is unavailable; did not fall back to Slack.
+q46,adversarial,gpt-4o-mini,slack_read_channel,true,true,3,1208,77,21,1536,0,0.000139,,"Correct tool and channel, but no time-window filtering (oldest/latest timestamps) for 'last Tuesday before lunch'. Usable but coarse."
+q47,param_precision,gpt-4o-mini,todoist_filter_tasks,true,true,5,1466,74,20,1536,0,0.000138,,Correct tool with precise filter query combining project and label.
+q48,param_precision,gpt-4o-mini,whoop_list_sleep,true,true,4,1471,75,31,1536,0,0.000145,,"Correct tool with 14-day range, but dates use a stale reference (2023) instead of current date."
+q49,param_precision,gpt-4o-mini,slack_read_channel,true,true,5,1080,76,22,1536,0,0.000140,,Correct tool with channel #oncall and limit=200 as required.
+q50,param_precision,gpt-4o-mini,gmail_search,true,true,4,1086,79,25,1536,0,0.000142,,"Correct tool and operators, but missing after: date filter for 'last month' constraint."
