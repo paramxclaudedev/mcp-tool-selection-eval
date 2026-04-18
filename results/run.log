@@ -1,0 +1,333 @@
+
+> mcp-tool-selection-eval@0.1.0 eval /Users/p/Code/mcp-tool-selection-eval
+> tsx src/index.ts -- --concurrency 6 --out results/anthropic-full.json
+
+running 44 cases × 3 tiers × 3 models = 396 calls
+  [claude-opus-4-7] small: skipping 27 cases (correct tool not in tier)
+  [claude-opus-4-7             ] small  s01 ok  picked=notion_search
+  [claude-opus-4-7             ] small  c02 miss picked=notion_search
+  [claude-opus-4-7             ] small  c01 ok  picked=gmail_create_draft
+  [claude-opus-4-7             ] small  s02 ok  picked=gmail_search_threads
+  [claude-opus-4-7             ] small  f02 ok  picked=gmail_get_thread
+  [claude-opus-4-7             ] small  f03 ok  picked=calendar_get_event
+  [claude-opus-4-7             ] small  c03 miss picked=-
+  [claude-opus-4-7             ] small  u01 miss picked=notion_search
+  [claude-opus-4-7             ] small  f01 ok  picked=notion_fetch
+  [claude-opus-4-7             ] small  l01 ok  picked=calendar_list_events
+  [claude-opus-4-7             ] small  c10 miss picked=gmail_search_threads
+  [claude-opus-4-7             ] small  a02 ok  picked=notion_search
+  [claude-opus-4-7             ] small  a06 ok  picked=gmail_search_threads
+  [claude-opus-4-7             ] small  a01 ok  picked=calendar_suggest_time
+  [claude-opus-4-7             ] small  l03 ok  picked=gmail_list_labels
+  [claude-opus-4-7             ] small  a10 ok  picked=notion_search
+  [claude-opus-4-7             ] small  a09 ok  picked=notion_search
+  [claude-opus-4-7] medium: skipping 10 cases (correct tool not in tier)
+  [claude-opus-4-7             ] medium s10 ok  picked=todoist_list_tasks
+  [claude-opus-4-7             ] medium s03 ok  picked=drive_search_files
+  [claude-opus-4-7             ] medium s04 ok  picked=slack_search_messages
+  [claude-opus-4-7             ] medium s02 ok  picked=gmail_search_threads
+  [claude-opus-4-7             ] medium s01 ok  picked=notion_search
+  [claude-opus-4-7             ] medium s05 ok  picked=linear_search_issues
+  [claude-opus-4-7             ] medium c05 ok  picked=slack_post_message
+  [claude-opus-4-7             ] medium c02 miss picked=notion_search
+  [claude-opus-4-7             ] medium c01 ok  picked=gmail_create_draft
+  [claude-opus-4-7             ] medium c04 miss picked=drive_search_files
+  [claude-opus-4-7             ] medium c03 miss picked=calendar_suggest_time
+  [claude-opus-4-7             ] medium f01 ok  picked=notion_fetch
+  [claude-opus-4-7             ] medium c09 ok  picked=todoist_create_task
+  [claude-opus-4-7             ] medium c06 ok  picked=linear_create_issue
+  [claude-opus-4-7             ] medium f02 ok  picked=gmail_get_thread
+  [claude-opus-4-7             ] medium c10 miss picked=gmail_search_threads
+  [claude-opus-4-7             ] medium f03 ok  picked=calendar_get_event
+  [claude-opus-4-7             ] medium u01 miss picked=notion_search
+  [claude-opus-4-7             ] medium u03 ok  picked=todoist_complete_task
+  [claude-opus-4-7             ] medium u02 ok  picked=linear_update_issue
+  [claude-opus-4-7             ] medium f04 ok  picked=drive_read_file_content
+  [claude-opus-4-7             ] medium l01 ok  picked=calendar_list_events
+  [claude-opus-4-7             ] medium l03 ok  picked=gmail_list_labels
+  [claude-opus-4-7             ] medium l04 ok  picked=slack_list_channels
+  [claude-opus-4-7             ] medium l02 ok  picked=drive_list_recent_files
+  [claude-opus-4-7             ] medium a01 ok  picked=calendar_suggest_time
+  [claude-opus-4-7             ] medium a02 ok  picked=slack_search_messages
+  [claude-opus-4-7             ] medium a06 ok  picked=gmail_search_threads
+  [claude-opus-4-7             ] medium a08 ok  picked=todoist_list_tasks
+  [claude-opus-4-7             ] medium a07 miss picked=linear_search_issues
+  [claude-opus-4-7             ] medium a09 ok  picked=drive_search_files
+  [claude-opus-4-7             ] medium a04 ok  picked=todoist_create_task
+  [claude-opus-4-7             ] medium a10 ok  picked=drive_search_files
+  [claude-opus-4-7             ] medium a03 miss picked=slack_list_channels
+  [claude-opus-4-7             ] large  s04 ok  picked=slack_search_messages
+  [claude-opus-4-7             ] large  s01 ok  picked=notion_search
+  [claude-opus-4-7             ] large  s02 ok  picked=gmail_search_threads
+  [claude-opus-4-7             ] large  s06 ok  picked=github_search_code
+  [claude-opus-4-7             ] large  s03 ok  picked=drive_search_files
+  [claude-opus-4-7             ] large  s05 ok  picked=linear_search_issues
+  [claude-opus-4-7             ] large  s08 ok  picked=figma_search_design_system
+  [claude-opus-4-7             ] large  s07 ok  picked=github_search_issues
+  [claude-opus-4-7             ] large  s10 ok  picked=todoist_list_tasks
+  [claude-opus-4-7             ] large  s09 ok  picked=stripe_list_customers
+  [claude-opus-4-7             ] large  c02 miss picked=notion_search
+  [claude-opus-4-7             ] large  c01 ok  picked=gmail_create_draft
+  [claude-opus-4-7             ] large  c05 ok  picked=slack_post_message
+  [claude-opus-4-7             ] large  c03 miss picked=calendar_suggest_time
+  [claude-opus-4-7             ] large  c04 miss picked=drive_search_files
+  [claude-opus-4-7             ] large  c08 ok  picked=stripe_create_customer
+  [claude-opus-4-7             ] large  c07 ok  picked=github_create_pr
+  [claude-opus-4-7             ] large  c09 ok  picked=todoist_create_task
+  [claude-opus-4-7             ] large  f01 ok  picked=notion_fetch
+  [claude-opus-4-7             ] large  f03 ok  picked=calendar_get_event
+  [claude-opus-4-7             ] large  f02 ok  picked=gmail_get_thread
+  [claude-opus-4-7             ] large  c10 miss picked=gmail_search_threads
+  [claude-opus-4-7             ] large  c06 ok  picked=linear_create_issue
+  [claude-opus-4-7             ] large  f04 ok  picked=drive_read_file_content
+  [claude-opus-4-7             ] large  f05 ok  picked=github_get_pr
+  [claude-opus-4-7             ] large  u03 ok  picked=todoist_complete_task
+  [claude-opus-4-7             ] large  u01 miss picked=notion_search
+  [claude-opus-4-7             ] large  u02 ok  picked=linear_update_issue
+  [claude-opus-4-7             ] large  l02 ok  picked=drive_list_recent_files
+  [claude-opus-4-7             ] large  l03 ok  picked=gmail_list_labels
+  [claude-opus-4-7             ] large  l01 ok  picked=calendar_list_events
+  [claude-opus-4-7             ] large  f06 ok  picked=figma_get_design_context
+  [claude-opus-4-7             ] large  l04 ok  picked=slack_list_channels
+  [claude-opus-4-7             ] large  l05 ok  picked=stripe_list_charges
+  [claude-opus-4-7             ] large  a01 ok  picked=calendar_suggest_time
+  [claude-opus-4-7             ] large  a04 ok  picked=todoist_create_task
+  [claude-opus-4-7             ] large  a03 miss picked=slack_list_channels
+  [claude-opus-4-7             ] large  a05 ok  picked=stripe_list_customers
+  [claude-opus-4-7             ] large  a06 ok  picked=gmail_search_threads
+  [claude-opus-4-7             ] large  a09 ok  picked=drive_search_files
+  [claude-opus-4-7             ] large  a08 ok  picked=todoist_list_tasks
+  [claude-opus-4-7             ] large  a02 ok  picked=slack_search_messages
+  [claude-opus-4-7             ] large  a10 ok  picked=drive_search_files
+  [claude-opus-4-7             ] large  a07 miss picked=linear_search_issues
+  [claude-sonnet-4-6] small: skipping 27 cases (correct tool not in tier)
+  [claude-sonnet-4-6           ] small  c10 miss picked=gmail_search_threads
+  [claude-sonnet-4-6           ] small  c01 ok  picked=gmail_create_draft
+  [claude-sonnet-4-6           ] small  s02 ok  picked=gmail_search_threads
+  [claude-sonnet-4-6           ] small  s01 ok  picked=notion_search
+  [claude-sonnet-4-6           ] small  c03 miss picked=notion_search
+  [claude-sonnet-4-6           ] small  f03 ok  picked=calendar_get_event
+  [claude-sonnet-4-6           ] small  f01 ok  picked=notion_fetch
+  [claude-sonnet-4-6           ] small  c02 miss picked=notion_search
+  [claude-sonnet-4-6           ] small  u01 miss picked=notion_search
+  [claude-sonnet-4-6           ] small  f02 ok  picked=gmail_get_thread
+  [claude-sonnet-4-6           ] small  l03 ok  picked=gmail_list_labels
+  [claude-sonnet-4-6           ] small  l01 ok  picked=calendar_list_events
+  [claude-sonnet-4-6           ] small  a02 ok  picked=notion_search
+  [claude-sonnet-4-6           ] small  a01 miss picked=gmail_search_threads
+  [claude-sonnet-4-6           ] small  a10 ok  picked=notion_search
+  [claude-sonnet-4-6           ] small  a06 ok  picked=gmail_search_threads
+  [claude-sonnet-4-6           ] small  a09 ok  picked=notion_search
+  [claude-sonnet-4-6] medium: skipping 10 cases (correct tool not in tier)
+  [claude-sonnet-4-6           ] medium s04 ok  picked=slack_search_messages
+  [claude-sonnet-4-6           ] medium s01 ok  picked=notion_search
+  [claude-sonnet-4-6           ] medium s03 ok  picked=drive_search_files
+  [claude-sonnet-4-6           ] medium s10 ok  picked=todoist_list_tasks
+  [claude-sonnet-4-6           ] medium s05 ok  picked=linear_search_issues
+  [claude-sonnet-4-6           ] medium s02 ok  picked=gmail_search_threads
+  [claude-sonnet-4-6           ] medium c05 ok  picked=slack_post_message
+  [claude-sonnet-4-6           ] medium c06 miss picked=linear_search_issues
+  [claude-sonnet-4-6           ] medium c04 miss picked=drive_search_files
+  [claude-sonnet-4-6           ] medium c02 miss picked=notion_search
+  [claude-sonnet-4-6           ] medium c01 ok  picked=gmail_create_draft
+  [claude-sonnet-4-6           ] medium c03 miss picked=calendar_suggest_time
+  [claude-sonnet-4-6           ] medium c09 ok  picked=todoist_create_task
+  [claude-sonnet-4-6           ] medium f03 ok  picked=calendar_get_event
+  [claude-sonnet-4-6           ] medium c10 miss picked=gmail_search_threads
+  [claude-sonnet-4-6           ] medium f01 ok  picked=notion_fetch
+  [claude-sonnet-4-6           ] medium f02 ok  picked=gmail_get_thread
+  [claude-sonnet-4-6           ] medium l02 ok  picked=drive_list_recent_files
+  [claude-sonnet-4-6           ] medium u03 ok  picked=todoist_complete_task
+  [claude-sonnet-4-6           ] medium u02 miss picked=linear_search_issues
+  [claude-sonnet-4-6           ] medium f04 ok  picked=drive_read_file_content
+  [claude-sonnet-4-6           ] medium l01 ok  picked=calendar_list_events
+  [claude-sonnet-4-6           ] medium u01 miss picked=notion_search
+  [claude-sonnet-4-6           ] medium l03 ok  picked=gmail_list_labels
+  [claude-sonnet-4-6           ] medium l04 ok  picked=slack_list_channels
+  [claude-sonnet-4-6           ] medium a01 ok  picked=calendar_suggest_time
+  [claude-sonnet-4-6           ] medium a03 miss picked=slack_list_channels
+  [claude-sonnet-4-6           ] medium a04 ok  picked=todoist_create_task
+  [claude-sonnet-4-6           ] medium a06 ok  picked=gmail_search_threads
+  [claude-sonnet-4-6           ] medium a07 miss picked=linear_search_issues
+  [claude-sonnet-4-6           ] medium a02 ok  picked=gmail_search_threads
+  [claude-sonnet-4-6           ] medium a08 ok  picked=todoist_list_tasks
+  [claude-sonnet-4-6           ] medium a10 ok  picked=drive_search_files
+  [claude-sonnet-4-6           ] medium a09 ok  picked=notion_search
+  [claude-sonnet-4-6           ] large  s04 ok  picked=slack_search_messages
+  [claude-sonnet-4-6           ] large  s02 ok  picked=gmail_search_threads
+  [claude-sonnet-4-6           ] large  s03 ok  picked=drive_search_files
+  [claude-sonnet-4-6           ] large  s06 ok  picked=github_search_code
+  [claude-sonnet-4-6           ] large  s05 ok  picked=linear_search_issues
+  [claude-sonnet-4-6           ] large  s07 ok  picked=github_search_issues
+  [claude-sonnet-4-6           ] large  s08 ok  picked=figma_search_design_system
+  [claude-sonnet-4-6           ] large  s10 ok  picked=todoist_list_tasks
+  [claude-sonnet-4-6           ] large  s09 ok  picked=stripe_list_customers
+  [claude-sonnet-4-6           ] large  s01 ok  picked=notion_search
+  [claude-sonnet-4-6           ] large  c01 ok  picked=gmail_create_draft
+  [claude-sonnet-4-6           ] large  c02 miss picked=notion_search
+  [claude-sonnet-4-6           ] large  c04 miss picked=drive_search_files
+  [claude-sonnet-4-6           ] large  c05 ok  picked=slack_post_message
+  [claude-sonnet-4-6           ] large  c06 miss picked=linear_search_issues
+  [claude-sonnet-4-6           ] large  c03 miss picked=calendar_list_events
+  [claude-sonnet-4-6           ] large  c08 ok  picked=stripe_create_customer
+  [claude-sonnet-4-6           ] large  c07 ok  picked=github_create_pr
+  [claude-sonnet-4-6           ] large  c10 miss picked=gmail_search_threads
+  [claude-sonnet-4-6           ] large  f01 ok  picked=notion_fetch
+  [claude-sonnet-4-6           ] large  c09 ok  picked=todoist_create_task
+  [claude-sonnet-4-6           ] large  f03 ok  picked=calendar_get_event
+  [claude-sonnet-4-6           ] large  f02 ok  picked=gmail_get_thread
+  [claude-sonnet-4-6           ] large  f04 ok  picked=drive_read_file_content
+  [claude-sonnet-4-6           ] large  f05 ok  picked=github_get_pr
+  [claude-sonnet-4-6           ] large  u02 miss picked=linear_search_issues
+  [claude-sonnet-4-6           ] large  u03 ok  picked=todoist_complete_task
+  [claude-sonnet-4-6           ] large  f06 miss picked=drive_search_files
+  [claude-sonnet-4-6           ] large  u01 miss picked=notion_search
+  [claude-sonnet-4-6           ] large  l01 ok  picked=calendar_list_events
+  [claude-sonnet-4-6           ] large  l02 ok  picked=drive_list_recent_files
+  [claude-sonnet-4-6           ] large  l04 ok  picked=slack_list_channels
+  [claude-sonnet-4-6           ] large  a03 miss picked=slack_list_channels
+  [claude-sonnet-4-6           ] large  l05 ok  picked=stripe_list_charges
+  [claude-sonnet-4-6           ] large  a01 ok  picked=calendar_suggest_time
+  [claude-sonnet-4-6           ] large  l03 ok  picked=gmail_list_labels
+  [claude-sonnet-4-6           ] large  a04 ok  picked=todoist_create_task
+  [claude-sonnet-4-6           ] large  a02 ok  picked=slack_search_messages
+  [claude-sonnet-4-6           ] large  a05 ok  picked=stripe_list_customers
+  [claude-sonnet-4-6           ] large  a08 ok  picked=todoist_list_tasks
+  [claude-sonnet-4-6           ] large  a07 miss picked=linear_search_issues
+  [claude-sonnet-4-6           ] large  a06 ok  picked=gmail_search_threads
+  [claude-sonnet-4-6           ] large  a10 ok  picked=notion_search
+  [claude-sonnet-4-6           ] large  a09 ok  picked=figma_search_design_system
+  [claude-haiku-4-5-20251001] small: skipping 27 cases (correct tool not in tier)
+  [claude-haiku-4-5-20251001   ] small  c10 miss picked=gmail_search_threads
+  [claude-haiku-4-5-20251001   ] small  c02 miss picked=notion_search
+  [claude-haiku-4-5-20251001   ] small  c01 ok  picked=gmail_create_draft
+  [claude-haiku-4-5-20251001   ] small  s02 ok  picked=gmail_search_threads
+  [claude-haiku-4-5-20251001   ] small  s01 ok  picked=notion_search
+  [claude-haiku-4-5-20251001   ] small  f02 ok  picked=gmail_get_thread
+  [claude-haiku-4-5-20251001   ] small  f01 ok  picked=notion_fetch
+  [claude-haiku-4-5-20251001   ] small  c03 miss picked=-
+  [claude-haiku-4-5-20251001   ] small  f03 ok  picked=calendar_get_event
+  [claude-haiku-4-5-20251001   ] small  u01 miss picked=notion_search
+  [claude-haiku-4-5-20251001   ] small  l01 miss picked=-
+  [claude-haiku-4-5-20251001   ] small  l03 ok  picked=gmail_list_labels
+  [claude-haiku-4-5-20251001   ] small  a01 ok  picked=calendar_suggest_time
+  [claude-haiku-4-5-20251001   ] small  a06 ok  picked=gmail_search_threads
+  [claude-haiku-4-5-20251001   ] small  a09 ok  picked=notion_search
+  [claude-haiku-4-5-20251001   ] small  a02 ok  picked=notion_search
+  [claude-haiku-4-5-20251001   ] small  a10 ok  picked=notion_search
+  [claude-haiku-4-5-20251001] medium: skipping 10 cases (correct tool not in tier)
+  [claude-haiku-4-5-20251001   ] medium s10 ok  picked=todoist_list_tasks
+  [claude-haiku-4-5-20251001   ] medium s05 ok  picked=linear_search_issues
+  [claude-haiku-4-5-20251001   ] medium s02 ok  picked=gmail_search_threads
+  [claude-haiku-4-5-20251001   ] medium s04 ok  picked=slack_search_messages
+  [claude-haiku-4-5-20251001   ] medium s03 ok  picked=drive_search_files
+  [claude-haiku-4-5-20251001   ] medium s01 ok  picked=notion_search
+  [claude-haiku-4-5-20251001   ] medium c01 ok  picked=gmail_create_draft
+  [claude-haiku-4-5-20251001   ] medium c04 miss picked=drive_search_files
+  [claude-haiku-4-5-20251001   ] medium c05 ok  picked=slack_post_message
+  [claude-haiku-4-5-20251001   ] medium c06 miss picked=-
+  [claude-haiku-4-5-20251001   ] medium c03 miss picked=-
+  [claude-haiku-4-5-20251001   ] medium c02 miss picked=notion_search
+  [claude-haiku-4-5-20251001   ] medium c09 ok  picked=todoist_create_task
+  [claude-haiku-4-5-20251001   ] medium f01 ok  picked=notion_fetch
+  [claude-haiku-4-5-20251001   ] medium c10 miss picked=gmail_search_threads
+  [claude-haiku-4-5-20251001   ] medium f02 ok  picked=gmail_get_thread
+  [claude-haiku-4-5-20251001   ] medium f03 ok  picked=calendar_get_event
+  [claude-haiku-4-5-20251001   ] medium u01 miss picked=notion_search
+  [claude-haiku-4-5-20251001   ] medium u02 ok  picked=linear_update_issue
+  [claude-haiku-4-5-20251001   ] medium f04 ok  picked=drive_read_file_content
+  [claude-haiku-4-5-20251001   ] medium l02 ok  picked=drive_list_recent_files
+  [claude-haiku-4-5-20251001   ] medium l04 ok  picked=slack_list_channels
+  [claude-haiku-4-5-20251001   ] medium u03 ok  picked=todoist_complete_task
+  [claude-haiku-4-5-20251001   ] medium l03 ok  picked=gmail_list_labels
+  [claude-haiku-4-5-20251001   ] medium a01 ok  picked=calendar_suggest_time
+  [claude-haiku-4-5-20251001   ] medium a02 ok  picked=gmail_search_threads
+  [claude-haiku-4-5-20251001   ] medium a03 miss picked=slack_list_channels
+  [claude-haiku-4-5-20251001   ] medium a04 ok  picked=todoist_create_task
+  [claude-haiku-4-5-20251001   ] medium l01 ok  picked=calendar_list_events
+  [claude-haiku-4-5-20251001   ] medium a06 ok  picked=gmail_search_threads
+  [claude-haiku-4-5-20251001   ] medium a07 miss picked=-
+  [claude-haiku-4-5-20251001   ] medium a10 ok  picked=drive_search_files
+  [claude-haiku-4-5-20251001   ] medium a08 ok  picked=todoist_list_tasks
+  [claude-haiku-4-5-20251001   ] medium a09 ok  picked=drive_search_files
+  [claude-haiku-4-5-20251001   ] large  s04 ok  picked=slack_search_messages
+  [claude-haiku-4-5-20251001   ] large  s02 ok  picked=gmail_search_threads
+  [claude-haiku-4-5-20251001   ] large  s01 ok  picked=notion_search
+  [claude-haiku-4-5-20251001   ] large  s05 ok  picked=linear_search_issues
+  [claude-haiku-4-5-20251001   ] large  s06 ok  picked=github_search_code
+  [claude-haiku-4-5-20251001   ] large  s03 miss picked=drive_list_recent_files
+  [claude-haiku-4-5-20251001   ] large  s08 ok  picked=figma_search_design_system
+  [claude-haiku-4-5-20251001   ] large  s09 ok  picked=stripe_list_customers
+  [claude-haiku-4-5-20251001   ] large  s07 ok  picked=github_search_issues
+  [claude-haiku-4-5-20251001   ] large  s10 ok  picked=todoist_list_tasks
+  [claude-haiku-4-5-20251001   ] large  c01 ok  picked=gmail_create_draft
+  [claude-haiku-4-5-20251001   ] large  c05 ok  picked=slack_post_message
+  [claude-haiku-4-5-20251001   ] large  c04 miss picked=drive_search_files
+  [claude-haiku-4-5-20251001   ] large  c07 ok  picked=github_create_pr
+  [claude-haiku-4-5-20251001   ] large  c06 ok  picked=linear_create_issue
+  [claude-haiku-4-5-20251001   ] large  c08 ok  picked=stripe_create_customer
+  [claude-haiku-4-5-20251001   ] large  c03 miss picked=-
+  [claude-haiku-4-5-20251001   ] large  c02 miss picked=notion_search
+  [claude-haiku-4-5-20251001   ] large  f01 ok  picked=notion_fetch
+  [claude-haiku-4-5-20251001   ] large  c09 ok  picked=todoist_create_task
+  [claude-haiku-4-5-20251001   ] large  c10 miss picked=gmail_search_threads
+  [claude-haiku-4-5-20251001   ] large  f02 ok  picked=gmail_get_thread
+  [claude-haiku-4-5-20251001   ] large  f04 ok  picked=drive_read_file_content
+  [claude-haiku-4-5-20251001   ] large  f05 ok  picked=github_get_pr
+  [claude-haiku-4-5-20251001   ] large  f03 miss picked=-
+  [claude-haiku-4-5-20251001   ] large  u01 miss picked=notion_search
+  [claude-haiku-4-5-20251001   ] large  u02 ok  picked=linear_update_issue
+  [claude-haiku-4-5-20251001   ] large  u03 ok  picked=todoist_complete_task
+  [claude-haiku-4-5-20251001   ] large  l02 ok  picked=drive_list_recent_files
+  [claude-haiku-4-5-20251001   ] large  l03 ok  picked=gmail_list_labels
+  [claude-haiku-4-5-20251001   ] large  l01 miss picked=-
+  [claude-haiku-4-5-20251001   ] large  l04 ok  picked=slack_list_channels
+  [claude-haiku-4-5-20251001   ] large  f06 miss picked=-
+  [claude-haiku-4-5-20251001   ] large  l05 ok  picked=stripe_list_charges
+  [claude-haiku-4-5-20251001   ] large  a01 ok  picked=calendar_suggest_time
+  [claude-haiku-4-5-20251001   ] large  a04 ok  picked=todoist_create_task
+  [claude-haiku-4-5-20251001   ] large  a03 miss picked=slack_list_channels
+  [claude-haiku-4-5-20251001   ] large  a05 ok  picked=stripe_list_customers
+  [claude-haiku-4-5-20251001   ] large  a02 ok  picked=slack_search_messages
+  [claude-haiku-4-5-20251001   ] large  a06 ok  picked=gmail_search_threads
+  [claude-haiku-4-5-20251001   ] large  a09 ok  picked=figma_search_design_system
+  [claude-haiku-4-5-20251001   ] large  a08 ok  picked=todoist_list_tasks
+  [claude-haiku-4-5-20251001   ] large  a10 ok  picked=drive_search_files
+  [claude-haiku-4-5-20251001   ] large  a07 miss picked=-
+
+wrote /Users/p/Code/mcp-tool-selection-eval/results/anthropic-full.json
+
+========================================================================
+MCP TOOL SELECTION EVAL
+========================================================================
+overall: 219/285 correct  (76.8%)   errors=0   cost=$4.0038
+
+model × tier (accuracy)
+  model                             small  medium   large
+  claude-haiku-4-5-20251001         70.6%   76.5%   75.0%
+  claude-opus-4-7                   76.5%   79.4%   84.1%
+  claude-sonnet-4-6                 70.6%   73.5%   77.3%
+
+model × category (accuracy)
+  model                           ambiguous    create     fetch      list    search    update
+  claude-haiku-4-5-20251001           83.3%     45.5%     84.6%     81.8%     94.4%     57.1%
+  claude-opus-4-7                     83.3%     50.0%    100.0%    100.0%    100.0%     57.1%
+  claude-sonnet-4-6                   79.2%     40.9%     92.3%    100.0%    100.0%     28.6%
+
+top confusions (expected → picked, count)
+  9x  notion_create_page  →  notion_search
+  9x  gmail_create_draft  →  gmail_search_threads
+  9x  notion_update_page  →  notion_search
+  6x  slack_post_message  →  slack_list_channels
+  6x  linear_create_issue  →  linear_search_issues
+  6x  drive_create_file  →  drive_search_files
+  4x  calendar_create_event  →  <none>
+  3x  calendar_create_event  →  calendar_suggest_time
+  3x  linear_create_issue  →  <none>
+  2x  linear_update_issue  →  linear_search_issues
+  2x  calendar_list_events  →  <none>
+  1x  calendar_create_event  →  notion_search
+  1x  calendar_create_event  →  calendar_list_events
+  1x  calendar_suggest_time  →  gmail_search_threads
+  1x  figma_get_design_context  →  drive_search_files
+========================================================================

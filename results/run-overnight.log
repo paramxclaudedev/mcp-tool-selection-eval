@@ -1,0 +1,37 @@
+
+> mcp-tool-selection-eval@0.1.0 eval /Users/p/Code/mcp-tool-selection-eval
+> tsx src/index.ts
+
+running 44 cases × 3 tiers × 3 models = 396 calls
+  [claude-opus-4-7] small: skipping 27 cases (correct tool not in tier)
+  [claude-opus-4-7             ] small  s02 ok  picked=gmail_search_threads
+  [claude-opus-4-7             ] small  c02 miss picked=notion_search
+  [claude-opus-4-7             ] small  s01 ok  picked=notion_search
+  [claude-opus-4-7             ] small  c01 ok  picked=gmail_create_draft
+  [claude-opus-4-7             ] small  f01 ok  picked=notion_fetch
+  [claude-opus-4-7             ] small  c10 miss picked=gmail_search_threads
+  [claude-opus-4-7             ] small  f02 ok  picked=gmail_get_thread
+  [claude-opus-4-7             ] small  c03 miss picked=calendar_suggest_time
+  [claude-opus-4-7             ] small  f03 ok  picked=calendar_get_event
+  [claude-opus-4-7             ] small  u01 miss picked=notion_search
+  [claude-opus-4-7             ] small  l01 ok  picked=calendar_list_events
+  [claude-opus-4-7             ] small  l03 ok  picked=gmail_list_labels
+  [claude-opus-4-7             ] small  a01 ok  picked=calendar_suggest_time
+  [claude-opus-4-7             ] small  a02 ok  picked=notion_search
+  [claude-opus-4-7             ] small  a06 ok  picked=gmail_search_threads
+  [claude-opus-4-7             ] small  a09 ok  picked=notion_search
+  [claude-opus-4-7             ] small  a10 ok  picked=notion_search
+  [claude-opus-4-7] medium: skipping 10 cases (correct tool not in tier)
+  [claude-opus-4-7             ] medium s04 ok  picked=slack_search_messages
+  [claude-opus-4-7             ] medium s01 ok  picked=notion_search
+  [claude-opus-4-7             ] medium s02 ok  picked=gmail_search_threads
+  [claude-opus-4-7             ] medium s03 ok  picked=drive_search_files
+  [claude-opus-4-7             ] medium s10 ok  picked=todoist_list_tasks
+  [claude-opus-4-7             ] medium c02 miss picked=notion_search
+  [claude-opus-4-7             ] medium c01 ok  picked=gmail_create_draft
+  [claude-opus-4-7             ] medium s05 ok  picked=linear_search_issues
+  [claude-opus-4-7             ] medium c03 miss picked=calendar_suggest_time
+  [claude-opus-4-7             ] medium c05 ok  picked=slack_post_message
+  [claude-opus-4-7             ] medium c04 miss picked=drive_search_files
+  [claude-opus-4-7             ] medium c09 ok  picked=todoist_create_task
+  [claude-opus-4-7             ] medium f01 ok  picked=notion_fetch

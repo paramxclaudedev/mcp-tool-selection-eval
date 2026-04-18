@@ -145,15 +145,26 @@ export async function runTier(
 ): Promise<CaseResult[]> {
   const serverNames = SERVER_TIERS[input.tier];
   const tools = buildToolset([...serverNames]);
+  const availableNames = new Set(tools.map((t) => t.name));
+
+  const runnable = input.cases.filter((c) =>
+    c.correct.some((name) => availableNames.has(name)),
+  );
+  const skipped = input.cases.length - runnable.length;
+  if (skipped > 0) {
+    process.stdout.write(
+      `  [${input.model}] ${input.tier}: skipping ${skipped} cases (correct tool not in tier)\n`,
+    );
+  }
 
   const results: CaseResult[] = [];
   let idx = 0;
   const workers = Array.from(
     { length: Math.max(1, input.concurrency) },
     async () => {
-      while (idx < input.cases.length) {
+      while (idx < runnable.length) {
         const my = idx++;
-        const c = input.cases[my]!;
+        const c = runnable[my]!;
         const r = await withRetry(() =>
           runOneCase(client, input.model, input.tier, tools, c),
         );
