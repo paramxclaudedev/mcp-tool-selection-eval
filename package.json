@@ -1,0 +1,24 @@
+{
+  "name": "mcp-tool-selection-eval",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Evaluate whether LLMs pick the right MCP tool first-try when given N tools across M servers.",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "eval": "tsx src/run.ts",
+    "eval:smoke": "tsx src/run.ts --smoke",
+    "judge": "tsx src/judge.ts",
+    "report": "tsx src/report.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.40.1",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

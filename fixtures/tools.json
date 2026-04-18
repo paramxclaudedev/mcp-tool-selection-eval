@@ -1,0 +1,461 @@
+{
+  "servers": [
+    {
+      "name": "whoop",
+      "description": "Biometric data from WHOOP wearable. Recovery, sleep, strain, workouts.",
+      "tools": [
+        {
+          "name": "whoop_get_profile",
+          "description": "Get the user's WHOOP profile (user id, email, first/last name).",
+          "input_schema": { "type": "object", "properties": {}, "required": [] }
+        },
+        {
+          "name": "whoop_list_recoveries",
+          "description": "List daily recovery scores over a date range. Recovery is a 0-100 score reflecting readiness from HRV, RHR, and sleep. Use for 'how recovered am I', 'recovery trend', 'readiness'.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "start": { "type": "string", "format": "date" },
+              "end": { "type": "string", "format": "date" }
+            },
+            "required": ["start", "end"]
+          }
+        },
+        {
+          "name": "whoop_list_sleep",
+          "description": "List sleep sessions over a date range. Includes sleep performance, efficiency, stages, time in bed. Use for 'how did I sleep', 'sleep score', 'REM/deep sleep'.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "start": { "type": "string", "format": "date" },
+              "end": { "type": "string", "format": "date" }
+            },
+            "required": ["start", "end"]
+          }
+        },
+        {
+          "name": "whoop_get_sleep",
+          "description": "Get a single sleep session by id with full detail.",
+          "input_schema": {
+            "type": "object",
+            "properties": { "sleep_id": { "type": "string" } },
+            "required": ["sleep_id"]
+          }
+        },
+        {
+          "name": "whoop_list_workouts",
+          "description": "List workouts over a date range. Includes sport, duration, strain, HR zones, kilojoules. Use for 'workouts this week', 'my runs', 'strain from lifting'.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "start": { "type": "string", "format": "date" },
+              "end": { "type": "string", "format": "date" }
+            },
+            "required": ["start", "end"]
+          }
+        },
+        {
+          "name": "whoop_list_cycles",
+          "description": "List physiological cycles (day-level containers) over a date range. Each cycle has day strain, max HR, avg HR, kilojoules.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "start": { "type": "string", "format": "date" },
+              "end": { "type": "string", "format": "date" }
+            },
+            "required": ["start", "end"]
+          }
+        },
+        {
+          "name": "whoop_get_body_measurement",
+          "description": "Get the user's height, weight, and max heart rate from WHOOP profile.",
+          "input_schema": { "type": "object", "properties": {}, "required": [] }
+        }
+      ]
+    },
+    {
+      "name": "todoist",
+      "description": "Task management — inbox, projects, labels, comments.",
+      "tools": [
+        {
+          "name": "todoist_list_tasks",
+          "description": "List active tasks filtered by project/section/label. Use for 'show my tasks', 'tasks in Work', 'p1 tasks'.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "project_id": { "type": "string" },
+              "label": { "type": "string" }
+            },
+            "required": []
+          }
+        },
+        {
+          "name": "todoist_filter_tasks",
+          "description": "List tasks matching a Todoist filter query like 'today', 'overdue', '#Work & p1', '@urgent'. Use when the user gives a date/priority/label expression.",
+          "input_schema": {
+            "type": "object",
+            "properties": { "query": { "type": "string" } },
+            "required": ["query"]
+          }
+        },
+        {
+          "name": "todoist_create_task",
+          "description": "Create a new task. Supports content, due date, priority, project, labels.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "content": { "type": "string" },
+              "due_string": { "type": "string" },
+              "priority": { "type": "number" },
+              "project_id": { "type": "string" }
+            },
+            "required": ["content"]
+          }
+        },
+        {
+          "name": "todoist_close_task",
+          "description": "Mark a task as completed (close it). Use for 'mark X done', 'finish task Y'.",
+          "input_schema": {
+            "type": "object",
+            "properties": { "task_id": { "type": "string" } },
+            "required": ["task_id"]
+          }
+        },
+        {
+          "name": "todoist_update_task",
+          "description": "Update an existing task's content, due date, priority, or project.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "task_id": { "type": "string" },
+              "content": { "type": "string" },
+              "due_string": { "type": "string" },
+              "priority": { "type": "number" }
+            },
+            "required": ["task_id"]
+          }
+        },
+        {
+          "name": "todoist_list_projects",
+          "description": "List all Todoist projects.",
+          "input_schema": { "type": "object", "properties": {}, "required": [] }
+        },
+        {
+          "name": "todoist_create_comment",
+          "description": "Add a comment to a task or project. Use for attaching context or notes.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "task_id": { "type": "string" },
+              "content": { "type": "string" }
+            },
+            "required": ["content"]
+          }
+        },
+        {
+          "name": "todoist_reopen_task",
+          "description": "Reopen a previously closed task.",
+          "input_schema": {
+            "type": "object",
+            "properties": { "task_id": { "type": "string" } },
+            "required": ["task_id"]
+          }
+        }
+      ]
+    },
+    {
+      "name": "notion",
+      "description": "Notion workspace — pages, databases, comments.",
+      "tools": [
+        {
+          "name": "notion_search",
+          "description": "Search across the user's Notion workspace by keyword. Returns pages and databases.",
+          "input_schema": {
+            "type": "object",
+            "properties": { "query": { "type": "string" } },
+            "required": ["query"]
+          }
+        },
+        {
+          "name": "notion_fetch",
+          "description": "Fetch a specific Notion page or database by id or URL. Returns full content.",
+          "input_schema": {
+            "type": "object",
+            "properties": { "id": { "type": "string" } },
+            "required": ["id"]
+          }
+        },
+        {
+          "name": "notion_create_page",
+          "description": "Create a new Notion page inside a parent page or database.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "parent": { "type": "string" },
+              "title": { "type": "string" },
+              "content": { "type": "string" }
+            },
+            "required": ["parent", "title"]
+          }
+        },
+        {
+          "name": "notion_update_page",
+          "description": "Update properties or body of an existing Notion page.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "page_id": { "type": "string" },
+              "properties": { "type": "object" },
+              "content": { "type": "string" }
+            },
+            "required": ["page_id"]
+          }
+        },
+        {
+          "name": "notion_create_database",
+          "description": "Create a new Notion database with specified properties schema.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "parent": { "type": "string" },
+              "title": { "type": "string" },
+              "properties": { "type": "object" }
+            },
+            "required": ["parent", "title", "properties"]
+          }
+        },
+        {
+          "name": "notion_create_comment",
+          "description": "Add a comment to a Notion page or block.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "page_id": { "type": "string" },
+              "content": { "type": "string" }
+            },
+            "required": ["page_id", "content"]
+          }
+        }
+      ]
+    },
+    {
+      "name": "gmail",
+      "description": "Gmail — search, read, draft, send email.",
+      "tools": [
+        {
+          "name": "gmail_search",
+          "description": "Search Gmail by query. Supports Gmail operators (from:, to:, subject:, has:attachment, after:, label:).",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "query": { "type": "string" },
+              "max_results": { "type": "number" }
+            },
+            "required": ["query"]
+          }
+        },
+        {
+          "name": "gmail_get_thread",
+          "description": "Fetch a full email thread by id with all messages.",
+          "input_schema": {
+            "type": "object",
+            "properties": { "thread_id": { "type": "string" } },
+            "required": ["thread_id"]
+          }
+        },
+        {
+          "name": "gmail_create_draft",
+          "description": "Create a draft email (not sent). Use when the user wants to write an email but not send it yet.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "to": { "type": "string" },
+              "subject": { "type": "string" },
+              "body": { "type": "string" }
+            },
+            "required": ["to", "subject", "body"]
+          }
+        },
+        {
+          "name": "gmail_send_email",
+          "description": "Send an email immediately. Use when the user explicitly says send/email/reply.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "to": { "type": "string" },
+              "subject": { "type": "string" },
+              "body": { "type": "string" }
+            },
+            "required": ["to", "subject", "body"]
+          }
+        },
+        {
+          "name": "gmail_list_labels",
+          "description": "List the user's Gmail labels (system + user-defined).",
+          "input_schema": { "type": "object", "properties": {}, "required": [] }
+        },
+        {
+          "name": "gmail_create_label",
+          "description": "Create a new Gmail label for organizing mail.",
+          "input_schema": {
+            "type": "object",
+            "properties": { "name": { "type": "string" } },
+            "required": ["name"]
+          }
+        }
+      ]
+    },
+    {
+      "name": "calendar",
+      "description": "Google Calendar — events, availability, scheduling.",
+      "tools": [
+        {
+          "name": "calendar_list_events",
+          "description": "List events on the primary calendar within a time range. Use for 'what's on my calendar', 'meetings today'.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "start": { "type": "string" },
+              "end": { "type": "string" }
+            },
+            "required": ["start", "end"]
+          }
+        },
+        {
+          "name": "calendar_get_event",
+          "description": "Fetch a specific event by id.",
+          "input_schema": {
+            "type": "object",
+            "properties": { "event_id": { "type": "string" } },
+            "required": ["event_id"]
+          }
+        },
+        {
+          "name": "calendar_create_event",
+          "description": "Create a new event with title, start, end, attendees, description.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string" },
+              "start": { "type": "string" },
+              "end": { "type": "string" },
+              "attendees": { "type": "array", "items": { "type": "string" } }
+            },
+            "required": ["title", "start", "end"]
+          }
+        },
+        {
+          "name": "calendar_update_event",
+          "description": "Update an existing event's time, attendees, or details.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "event_id": { "type": "string" },
+              "start": { "type": "string" },
+              "end": { "type": "string" }
+            },
+            "required": ["event_id"]
+          }
+        },
+        {
+          "name": "calendar_delete_event",
+          "description": "Delete an event from the calendar.",
+          "input_schema": {
+            "type": "object",
+            "properties": { "event_id": { "type": "string" } },
+            "required": ["event_id"]
+          }
+        },
+        {
+          "name": "calendar_suggest_time",
+          "description": "Suggest free 30/60 minute slots between now and a horizon date, respecting existing events.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "duration_minutes": { "type": "number" },
+              "horizon_days": { "type": "number" }
+            },
+            "required": ["duration_minutes"]
+          }
+        }
+      ]
+    },
+    {
+      "name": "slack",
+      "description": "Slack workspace — channels, DMs, messages.",
+      "tools": [
+        {
+          "name": "slack_list_channels",
+          "description": "List all Slack channels the user is in.",
+          "input_schema": { "type": "object", "properties": {}, "required": [] }
+        },
+        {
+          "name": "slack_send_message",
+          "description": "Send a message to a Slack channel or DM. Use for 'DM alice', 'message #general'.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "channel": { "type": "string" },
+              "text": { "type": "string" }
+            },
+            "required": ["channel", "text"]
+          }
+        },
+        {
+          "name": "slack_read_channel",
+          "description": "Read recent messages in a Slack channel. Use for 'what did team say in #eng', 'catch me up on #product'.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "channel": { "type": "string" },
+              "limit": { "type": "number" }
+            },
+            "required": ["channel"]
+          }
+        },
+        {
+          "name": "slack_search",
+          "description": "Search Slack messages and files by keyword across all channels.",
+          "input_schema": {
+            "type": "object",
+            "properties": { "query": { "type": "string" } },
+            "required": ["query"]
+          }
+        },
+        {
+          "name": "slack_get_thread",
+          "description": "Fetch a full Slack thread by channel + parent message timestamp.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "channel": { "type": "string" },
+              "ts": { "type": "string" }
+            },
+            "required": ["channel", "ts"]
+          }
+        },
+        {
+          "name": "slack_upload_file",
+          "description": "Upload a file to a Slack channel or DM.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "channel": { "type": "string" },
+              "path": { "type": "string" }
+            },
+            "required": ["channel", "path"]
+          }
+        },
+        {
+          "name": "slack_list_users",
+          "description": "List workspace users to find someone by name.",
+          "input_schema": {
+            "type": "object",
+            "properties": { "query": { "type": "string" } },
+            "required": []
+          }
+        }
+      ]
+    }
+  ]
+}

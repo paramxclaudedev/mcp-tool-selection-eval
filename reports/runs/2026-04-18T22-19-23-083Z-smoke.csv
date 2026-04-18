@@ -1,0 +1,16 @@
+query_id,category,model,first_tool,tool_correct,tool_in_any_of,param_score,latency_ms,input_tokens,output_tokens,cache_read_tokens,cache_write_tokens,cost_usd,error,justification
+q01,clear_single,claude-opus-4-7,whoop_list_recoveries,true,true,4,2405,448,115,0,4607,0.101726,,Correct tool; date range is a bit wide for 'last night' but still captures it.
+q02,clear_single,claude-opus-4-7,whoop_list_sleep,true,true,4,2351,447,114,4607,0,0.022166,,Correct tool with a one-night date range; exact dates depend on 'today' but range is reasonable for last night's sleep.
+q03,clear_single,claude-opus-4-7,whoop_list_workouts,true,true,5,1989,449,115,4607,0,0.022271,,Correct tool with a valid Mon-Sun week date range.
+q04,clear_single,claude-opus-4-7,calendar_list_events,true,true,5,2115,447,122,4607,0,0.022766,,Correct tool with proper full-day date range for today.
+q05,clear_single,claude-opus-4-7,todoist_filter_tasks,true,true,5,2067,450,70,4607,0,0.018911,,Correct tool and filter query 'today' matches exactly.
+q01,clear_single,claude-sonnet-4-6,whoop_list_recoveries,true,true,4,2074,331,85,0,3492,0.015363,,"Correct tool with a 1-day range for last night. Date values are hardcoded rather than relative to today, but the range shape is appropriate."
+q02,clear_single,claude-sonnet-4-6,whoop_list_sleep,true,true,4,2456,330,95,3492,0,0.003463,,"Correct tool; date range covers last night but uses a hardcoded date rather than relative to today, which may be slightly off depending on current date."
+q03,clear_single,claude-sonnet-4-6,whoop_list_workouts,true,true,4,2024,332,95,3492,0,0.003469,,Correct tool with a week-long date range; exact dates can't be verified against 'this week' but format is plausible.
+q04,clear_single,claude-sonnet-4-6,calendar_list_events,true,true,5,1976,330,95,3492,0,0.003463,,Correct tool with proper start/end covering today.
+q05,clear_single,claude-sonnet-4-6,todoist_filter_tasks,true,true,5,1384,332,57,3492,0,0.002899,,Correct tool with exact filter query 'today'.
+q01,clear_single,claude-haiku-4-5-20251001,whoop_list_recoveries,true,true,4,1524,3822,103,0,0,0.004337,,"Correct tool with a narrow date range covering last night; dates are hardcoded rather than relative to today, minor flaw."
+q02,clear_single,claude-haiku-4-5-20251001,NONE,false,false,0,3320,3821,66,0,0,0.004151,,Model failed to call whoop_list_sleep; instead asked for clarification. Should have called the tool with a recent date range for last night's sleep.
+q03,clear_single,claude-haiku-4-5-20251001,whoop_list_workouts,true,true,4,1109,3823,97,0,0,0.004308,,"Correct tool with a week-long date range. Dates are plausible but static; minor concern about reflecting actual current week, otherwise well-parameterized."
+q04,clear_single,claude-haiku-4-5-20251001,calendar_list_events,true,true,5,1446,3821,105,0,0,0.004346,,Correct tool with full-day range for today.
+q05,clear_single,claude-haiku-4-5-20251001,todoist_filter_tasks,true,true,5,1118,3823,68,0,0,0.004163,,Correct tool with exact filter query 'today'.

@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+.env.local
+reports/runs/*.jsonl
+reports/runs/*.json
+!reports/runs/.gitkeep
+*.log
+.DS_Store
