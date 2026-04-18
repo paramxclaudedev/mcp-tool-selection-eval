@@ -1,0 +1,25 @@
+{
+  "name": "mcp-tool-selection-eval",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Measures whether Claude picks the right MCP tool on the first try as the number of connected servers grows.",
+  "type": "module",
+  "bin": {
+    "mcp-tool-selection-eval": "./dist/index.js"
+  },
+  "scripts": {
+    "eval": "tsx src/index.ts",
+    "eval:smoke": "tsx src/index.ts --smoke",
+    "report": "tsx src/report.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.90.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}
