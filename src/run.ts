@@ -3,6 +3,8 @@ dotenvConfig({ override: true });
 import Anthropic from "@anthropic-ai/sdk";
 import { loadQueries, loadTools } from "./load.ts";
 import { makeAnthropicRunner } from "./runners/anthropic.ts";
+import { makeGeminiRunner } from "./runners/gemini.ts";
+import { makeOpenAIRunner } from "./runners/openai.ts";
 import { judgeRow } from "./judge.ts";
 import { summarize } from "./score.ts";
 import { writeReport } from "./report.ts";
@@ -40,6 +42,14 @@ async function main() {
     makeAnthropicRunner("claude-sonnet-4-6"),
     makeAnthropicRunner("claude-haiku-4-5-20251001"),
   ];
+  if (process.env.GEMINI_API_KEY) {
+    runners.push(makeGeminiRunner("gemini-2.5-pro"));
+    runners.push(makeGeminiRunner("gemini-2.5-flash"));
+  }
+  if (process.env.OPENAI_API_KEY) {
+    runners.push(makeOpenAIRunner("gpt-4o"));
+    runners.push(makeOpenAIRunner("gpt-4o-mini"));
+  }
 
   console.log(
     `[run] ${queries.length} queries × ${runners.length} models = ${queries.length * runners.length} rows`,
