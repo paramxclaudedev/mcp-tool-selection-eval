@@ -1,123 +1,139 @@
-# Findings — Anthropic run, 2026-04-19
+# Findings — 2026-04-19
 
-First run. 44 cases, 3 server-count tiers, 3 Claude models, 285 calls,
-$3.05 with prompt caching on the tool-surface + system prompt.
+Two runs. Second run adds OpenAI (GPT-5, GPT-5 Mini) and Google (Gemini
+2.5 Pro, Gemini 2.5 Flash) alongside the three Claude models, and
+introduces a second accuracy metric.
 
 ## Headline
 
-**77.5% overall first-tool accuracy.** Opus 4.7 leads at the large tier
-(10 servers, ~37 tools) with 84.1% — the only point where it pulls
-cleanly ahead of Sonnet and Haiku. At the small tier (3 servers) all
-three models tie at 76.5%: the contest is decided by category mix, not
-tool-surface size.
+**Cross-provider: 665 calls, $5.07 with caching.**
 
-## Model × tier
+**Strict first-tool accuracy:** 68.3% overall. **Sensible accuracy:**
+81.8% overall — same picks, but a same-server `search`/`list`
+preceding the correct `create`/`update`/`fetch` is counted as correct.
+The 13-point gap is the "search-before-write" pattern: models
+rationally locate the target entity first when no ID was given.
 
-```
-                  small   medium   large
-opus-4-7          76.5%   79.4%   84.1%
-sonnet-4-6        76.5%   73.5%   77.3%
-haiku-4-5         76.5%   70.6%   79.5%
-```
-
-Opus is the only model whose accuracy rises monotonically with tool
-count. Sonnet and Haiku dip at medium — likely because medium adds
-Linear + Todoist, which pull "create a ticket"-type queries into a
-three-way tie between Linear, Todoist, and (in Todoist's absence)
-Slack.
-
-## Model × category
+## Model × tier (strict / sensible)
 
 ```
-                  ambiguous  create  fetch   list   search  update
-opus-4-7              83.3%   50.0%  100.0%  100.0%  100.0%   57.1%
-sonnet-4-6            83.3%   40.9%   92.3%  100.0%  100.0%   28.6%
-haiku-4-5             83.3%   40.9%   84.6%   90.9%  100.0%   57.1%
+                      small          medium          large
+Opus 4.7            76.5% / 94.1%   79.4% / 97.1%   84.1% / 97.7%
+Sonnet 4.6          70.6% / 88.2%   73.5% / 97.1%   77.3% / 97.7%
+Haiku 4.5           64.7% / 82.4%   70.6% / 85.3%   79.5% / 93.2%
+GPT-5 Mini          70.6% / 88.2%   73.5% / 91.2%   81.8% / 90.9%
+Gemini 2.5 Pro      52.9% / 64.7%   64.7% / 73.5%   65.9% / 75.0%
+GPT-5               64.7% / 76.5%   58.8% / 67.6%   54.5% / 63.6%
+Gemini 2.5 Flash    58.8% / 76.5%   44.1% / 55.9%   52.3% / 59.1%
 ```
 
-Search and list are solved. Fetch (given an ID) is solved on Opus,
-near-solved on the rest. **Create and update are the floor — and
-they're the floor for reasons that aren't really the model's fault.**
+## What's interesting
 
-## The create/update cliff isn't what it looks like
+**Opus 4.7 wins outright.** 97.7% sensible at the large tier. Pipeline
+of Opus → Sonnet → Haiku ties Opus only on sensible at the larger
+tiers, never on strict. On the strict metric Sonnet and Haiku
+separate by ~7 points; on sensible they converge.
 
-The top confusions in the data are these:
+**GPT-5 Mini is the surprise.** It beats GPT-5 at every tier on both
+metrics and sits between Sonnet and Opus. 81.8% strict at the large
+tier — better than Haiku (79.5%), nearly matches Opus in the tool-
+count-up direction. A smaller/cheaper OpenAI model outperforming its
+flagship on tool selection is counterintuitive and worth
+investigating.
+
+**GPT-5 degrades with tool count.** 64.7% → 58.8% → 54.5% as servers
+grow. It's the only model where adding tools hurt. The data shows this
+is driven by GPT-5 refusing to call any tool more often on harder
+cases (9× `gmail_create_draft → <none>`, 6× `calendar_create_event →
+<none>`). Consistent with a calibrated "abstain" behavior that's the
+wrong setting for this eval.
+
+**Gemini 2.5 Flash is effectively broken on list queries.** 9.1%
+category accuracy on `list` — it refused to call any tool on most
+list-style prompts ("what's on my calendar tomorrow", "show my Gmail
+labels"). One case returned `picked="now"` — a malformed tool name.
+Flash's function-calling is not production-grade for this workload.
+
+**Gemini 2.5 Pro is mid.** ~65% strict, ~75% sensible. Better than
+Flash. Unremarkable compared to Claude and GPT-5 Mini.
+
+## Category accuracy (strict)
 
 ```
-9x  notion_create_page  →  notion_search
-9x  gmail_create_draft  →  gmail_search_threads
-9x  notion_update_page  →  notion_search
-6x  slack_post_message  →  slack_list_channels
-6x  drive_create_file   →  drive_search_files
-5x  calendar_create_event → calendar_suggest_time
-5x  linear_create_issue → linear_search_issues
+                    ambiguous  create  fetch   list   search  update
+Opus 4.7                83.3%   50.0%  100.0%  100.0%  100.0%   57.1%
+Sonnet 4.6              79.2%   40.9%   92.3%  100.0%  100.0%   28.6%
+Haiku 4.5               79.2%   40.9%   84.6%   81.8%  100.0%   57.1%
+GPT-5 Mini              79.2%   40.9%  100.0%  100.0%   94.4%   57.1%
+Gemini 2.5 Pro          45.8%   36.4%  100.0%   81.8%   83.3%   57.1%
+GPT-5                   50.0%   27.3%   84.6%   90.9%   77.8%   28.6%
+Gemini 2.5 Flash        75.0%   27.3%   61.5%    9.1%   72.2%   28.6%
 ```
 
-Every one of these is the same shape: the query named a write action
-on an entity the model doesn't have an ID for, and the model's first
-tool was a same-server locator. _"Put a new page under the Engineering
-workspace"_ → Notion search. _"Reply to Maya's thread"_ → Gmail search.
-_"Post in #launches"_ → Slack list channels. _"File a Linear ticket"_
-→ Linear search.
+Create (40-50% on Claude) and update (28-57%) remain the floor, but
+sensible scoring lifts these — the confusions are almost always
+same-server locators.
 
-These are rational first steps, not misclassifications. But a
-first-tool-accuracy metric can't tell them apart from genuine routing
-errors.
+## Top confusions
 
-## What to change
+```
+21x  notion_update_page  →  notion_search
+19x  notion_create_page  →  notion_search
+18x  linear_create_issue →  <none>
+15x  gmail_create_draft  →  gmail_search_threads
+13x  calendar_create_event → <none>
+12x  drive_create_file   →  drive_search_files
+10x  slack_post_message  →  slack_list_channels
+ 9x  gmail_create_draft  →  <none>
+ 8x  calendar_create_event → calendar_suggest_time
+ 8x  linear_create_issue →  linear_search_issues
+```
 
-**The eval isn't wrong — the metric is.** Two fixes would make the
-signal cleaner:
+Two failure modes, clearly separated:
 
-1. **Provide IDs where IDs exist.** _"Update the Notion page at ID
-   12345 — add an Action items section"_ removes the search-first
-   excuse. Update-category accuracy would roughly double.
+1. **Search-before-write** (Claude, GPT-5 Mini): pick a same-server
+   locator when no ID is given. Rational. Counted correct under
+   sensible metric.
 
-2. **Add a second score.** Call it _sensible accuracy_: first tool is
-   either correct or a same-server `search`/`list` that plausibly
-   precedes the correct `create`/`update`/`fetch`. That score probably
-   lands in the 85–95% range across all three models and isolates true
-   routing errors (like the 1× `figma_get_design_context →
-drive_search_files`, which is a real miss).
+2. **Refuse** (GPT-5 non-mini, Gemini Flash): no tool call. Not
+   rational — the prompt has enough to act, and the system prompt
+   explicitly says "do not ask clarifying questions."
 
-The second change is a report.ts-only edit and was planned for this
-commit. It didn't land.
+## What to do with this
 
-## Ambiguous category
+- **For this workload, Claude is the default.** Opus 4.7 for
+  correctness, Haiku for cost. GPT-5 Mini is a credible second if
+  you're already paying OpenAI.
+- **Avoid Gemini 2.5 Flash for tool routing** until it stops
+  refusing to call. Pro is passable but unremarkable.
+- **If measuring other teams' benchmarks, check their metric.** A 68%
+  strict score and an 82% sensible score describe the same behavior;
+  either can be honest depending on what you're optimizing.
+- **The create/update "floor" is an artifact of the eval, not a model
+  failing.** ID-seeded update cases would make this the create/update
+  score people should cite.
 
-83.3% across all three models. The trap cases mostly worked:
-_"Find the figma link — I think it was in an email from Jen"_ went to
-Gmail, not Figma, on every model. The losses were on cases like
-_"Write up a ticket for the checkout bug, then post it in
-#engineering"_, where the model chose Linear first 50% of the time and
-Slack first 50%. Both are defensible — the prompt underspecifies
-ordering.
+## Caveats
 
-## Open questions
+- n=17 per model-tier cell. Confidence intervals overlap heavily; the
+  GPT-5-Mini-beats-Haiku line is worth ~2 cases and may not survive a
+  second run.
+- Synthetic tool surfaces. Real MCP servers have longer descriptions,
+  richer schemas, and sometimes conflicting conventions. This bench
+  is optimistic.
+- No retry / no reflection. `tool_choice: "auto"`, one shot. A real
+  agent would likely re-roll after a `<none>`.
+- Anthropic prompt caching is working (69% cache-read after tier
+  warmup). OpenAI/Gemini caching is opaque in the response and not
+  necessarily engaged.
 
-- **Does this pattern hold across providers?** The planned v2 adds
-  GPT-5/GPT-5-mini and Gemini 2.5 Pro/Flash. Those providers expose
-  function-calling differently (OpenAI: `function.parameters`; Gemini:
-  `functionDeclarations`), and it's not obvious whether OpenAI's
-  confidence-calibrated `tool_choice: "auto"` picks _earlier_ in a
-  multi-step chain than Claude does. That would bias the strict metric
-  the other way.
+## Run it
 
-- **Does namespacing help?** All current tool names are flat —
-  `notion_search`, `gmail_search_threads`. The confusion matrix
-  suggests it wouldn't help much: models rarely cross server
-  boundaries. But a `notion.search` / `gmail.search` format might
-  reduce the 1-in-N noise on search-vs-search collisions (e.g. the
-  case where Opus picked `slack_search_messages` for an ambiguous
-  "find rate limiter" query in the medium tier).
-
-- **How much of the small-tier tie is random?** 3 servers × 17 runnable
-  cases × 3 models = 51 data points per tier, n≈17 per cell. Opus
-  medium-vs-large separation (79.4% → 84.1%) is ~2 cases. These
-  confidence intervals overlap heavily.
-
-## Cost
-
-$3.05 total for 285 calls. Cache-read tokens were 69% of input tokens
-after the first tier warmed the cache. Without caching, cost would
-have been closer to $10.
+```bash
+pnpm install
+source ~/.config/inbox-triage.env
+pnpm eval                                 # all 7 models
+pnpm eval -- --providers anthropic        # Claude only
+pnpm eval -- --models gpt-5,gpt-5-mini    # OpenAI only
+pnpm eval:smoke                           # 5 cases, Haiku
+```

@@ -1,20 +1,13 @@
-import Anthropic from "@anthropic-ai/sdk";
-import { buildToolset, type ServerBundle } from "./servers.js";
+import { buildToolset } from "./servers.js";
 import { CASES, SERVER_TIERS, type TestCase, type Tier } from "./cases.js";
+import { call, MODELS, type ModelSpec } from "./providers.js";
+import type Anthropic from "@anthropic-ai/sdk";
 
-export type ModelId =
-  | "claude-opus-4-7"
-  | "claude-sonnet-4-6"
-  | "claude-haiku-4-5-20251001";
-
-export const MODELS: ModelId[] = [
-  "claude-opus-4-7",
-  "claude-sonnet-4-6",
-  "claude-haiku-4-5-20251001",
-];
+export { MODELS };
+export type { ModelSpec };
 
 export type RunInput = {
-  model: ModelId;
+  spec: ModelSpec;
   tier: Tier;
   cases: TestCase[];
   concurrency: number;
@@ -25,7 +18,8 @@ export type CaseResult = {
   query: string;
   category: TestCase["category"];
   tier: Tier;
-  model: ModelId;
+  model: string;
+  provider: string;
   picked_tool: string | null;
   correct_tools: string[];
   correct: boolean;
@@ -38,79 +32,42 @@ export type CaseResult = {
   error?: string;
 };
 
-const SYSTEM_PROMPT = `You are an assistant with access to tools from several connected MCP servers. Pick the single most appropriate tool to start with for each user request. If the request requires multiple tools, pick the one that should be called first. Prefer the tool whose description most closely matches the user's intent. Do not ask clarifying questions — make the best call from the information given.`;
-
-function pickFirstToolUse(
-  message: Anthropic.Messages.Message,
-): { name: string } | null {
-  for (const block of message.content) {
-    if (block.type === "tool_use") return { name: block.name };
-  }
-  return null;
-}
-
 export async function runOneCase(
-  client: Anthropic,
-  model: ModelId,
+  spec: ModelSpec,
   tier: Tier,
   tools: Anthropic.Tool[],
   c: TestCase,
 ): Promise<CaseResult> {
   const started = Date.now();
   try {
-    const toolsWithCache = tools.map((t, i) =>
-      i === tools.length - 1
-        ? { ...t, cache_control: { type: "ephemeral" as const } }
-        : t,
-    );
-
-    const message = await client.messages.create({
-      model,
-      max_tokens: 512,
-      system: [
-        {
-          type: "text",
-          text: SYSTEM_PROMPT,
-          cache_control: { type: "ephemeral" },
-        },
-      ],
-      tools: toolsWithCache,
-      tool_choice: { type: "auto" },
-      messages: [{ role: "user", content: c.query }],
-    });
-
-    const picked = pickFirstToolUse(message);
-    const correct = picked ? c.correct.includes(picked.name) : false;
-
-    const usage = message.usage as Anthropic.Messages.Usage & {
-      cache_creation_input_tokens?: number;
-      cache_read_input_tokens?: number;
-    };
-
+    const r = await call(spec, tools, c.query);
+    const correct = r.picked_tool ? c.correct.includes(r.picked_tool) : false;
     return {
       case_id: c.id,
       query: c.query,
       category: c.category,
       tier,
-      model,
-      picked_tool: picked?.name ?? null,
+      model: spec.id,
+      provider: spec.provider,
+      picked_tool: r.picked_tool,
       correct_tools: c.correct,
       correct,
-      stop_reason: message.stop_reason,
-      input_tokens: usage.input_tokens ?? 0,
-      cache_read_tokens: usage.cache_read_input_tokens ?? 0,
-      cache_write_tokens: usage.cache_creation_input_tokens ?? 0,
-      output_tokens: usage.output_tokens ?? 0,
+      stop_reason: r.stop_reason,
+      input_tokens: r.input_tokens,
+      cache_read_tokens: r.cache_read_tokens,
+      cache_write_tokens: r.cache_write_tokens,
+      output_tokens: r.output_tokens,
       latency_ms: Date.now() - started,
     };
   } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
+    const msg = err instanceof Error ? err.message : String(err);
     return {
       case_id: c.id,
       query: c.query,
       category: c.category,
       tier,
-      model,
+      model: spec.id,
+      provider: spec.provider,
       picked_tool: null,
       correct_tools: c.correct,
       correct: false,
@@ -120,7 +77,7 @@ export async function runOneCase(
       cache_write_tokens: 0,
       output_tokens: 0,
       latency_ms: Date.now() - started,
-      error: message,
+      error: msg,
     };
   }
 }
@@ -139,24 +96,19 @@ async function withRetry<T>(fn: () => Promise<T>, tries = 3): Promise<T> {
   throw lastErr;
 }
 
-export async function runTier(
-  client: Anthropic,
-  input: RunInput,
-): Promise<CaseResult[]> {
+export async function runTier(input: RunInput): Promise<CaseResult[]> {
   const serverNames = SERVER_TIERS[input.tier];
   const tools = buildToolset([...serverNames]);
   const availableNames = new Set(tools.map((t) => t.name));
-
   const runnable = input.cases.filter((c) =>
     c.correct.some((name) => availableNames.has(name)),
   );
   const skipped = input.cases.length - runnable.length;
   if (skipped > 0) {
     process.stdout.write(
-      `  [${input.model}] ${input.tier}: skipping ${skipped} cases (correct tool not in tier)\n`,
+      `  [${input.spec.label}] ${input.tier}: skipping ${skipped} cases\n`,
     );
   }
-
   const results: CaseResult[] = [];
   let idx = 0;
   const workers = Array.from(
@@ -166,11 +118,11 @@ export async function runTier(
         const my = idx++;
         const c = runnable[my]!;
         const r = await withRetry(() =>
-          runOneCase(client, input.model, input.tier, tools, c),
+          runOneCase(input.spec, input.tier, tools, c),
         );
         results.push(r);
         process.stdout.write(
-          `  [${input.model.padEnd(28)}] ${input.tier.padEnd(6)} ${c.id} ${
+          `  [${input.spec.label.padEnd(16)}] ${input.tier.padEnd(6)} ${c.id} ${
             r.correct ? "ok " : r.error ? "err" : "miss"
           } picked=${r.picked_tool ?? "-"}\n`,
         );
@@ -183,17 +135,16 @@ export async function runTier(
 }
 
 export async function runAll(options: {
-  client: Anthropic;
-  models: ModelId[];
+  specs: ModelSpec[];
   tiers: Tier[];
   cases: TestCase[];
   concurrency: number;
 }): Promise<CaseResult[]> {
   const all: CaseResult[] = [];
-  for (const model of options.models) {
+  for (const spec of options.specs) {
     for (const tier of options.tiers) {
-      const part = await runTier(options.client, {
-        model,
+      const part = await runTier({
+        spec,
         tier,
         cases: options.cases,
         concurrency: options.concurrency,
