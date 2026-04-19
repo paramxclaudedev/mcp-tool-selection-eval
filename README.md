@@ -2,6 +2,10 @@
 
 Given N MCP tools across M servers, does the model pick the right one first try?
 
+## Headline result
+
+**Across 350 rows × 7 models × 50 unique queries on a 44-tool catalog from 6 MCP servers, GPT-4o-mini wins first-try tool correctness at 92.0% (params 4.00/5, $0.008 total), Opus 4.7 and Sonnet 4.6 tie at 84.0% (params ~3.92/5), Haiku 4.5 lands 78.0%, GPT-4o 76.0%, Gemini 2.5 Pro 70.0%, and Gemini 2.5 Flash collapses to 46.0% — Flash breaks badly on multi_tool and clear_single queries.** Full run costs under $2 total with prompt caching >80% hit rate on the Claude models. Most first-try failures are "reasonable prep step, wrong gold tool" (searching before closing/sending) rather than hard misses.
+
 ## Why
 
 When an assistant has 40+ tools across 6 MCP servers, tool selection becomes the bottleneck. A right answer with the wrong tool is still wrong. This eval measures first-try hit rate under realistic tool-catalog pressure.
