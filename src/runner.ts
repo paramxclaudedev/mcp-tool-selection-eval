@@ -2,6 +2,7 @@ import { buildToolset } from "./servers.js";
 import { CASES, SERVER_TIERS, type TestCase, type Tier } from "./cases.js";
 import { call, MODELS, type ModelSpec } from "./providers.js";
 import type Anthropic from "@anthropic-ai/sdk";
+import type { Stream } from "./stream.js";
 
 export { MODELS };
 export type { ModelSpec };
@@ -11,6 +12,7 @@ export type RunInput = {
   tier: Tier;
   cases: TestCase[];
   concurrency: number;
+  stream?: Stream;
 };
 
 export type CaseResult = {
@@ -104,10 +106,22 @@ export async function runTier(input: RunInput): Promise<CaseResult[]> {
     c.correct.some((name) => availableNames.has(name)),
   );
   const skipped = input.cases.length - runnable.length;
-  if (skipped > 0) {
-    process.stdout.write(
+  if (skipped > 0 && !input.stream) {
+    process.stderr.write(
       `  [${input.spec.label}] ${input.tier}: skipping ${skipped} cases\n`,
     );
+  }
+  // Emit queued events up front so the dashboard shows the full surface.
+  if (input.stream) {
+    for (const c of runnable) {
+      input.stream.queued({
+        model: input.spec.id,
+        provider: input.spec.provider,
+        tier: input.tier,
+        case_id: c.id,
+        category: c.category,
+      });
+    }
   }
   const results: CaseResult[] = [];
   let idx = 0;
@@ -117,15 +131,28 @@ export async function runTier(input: RunInput): Promise<CaseResult[]> {
       while (idx < runnable.length) {
         const my = idx++;
         const c = runnable[my]!;
+        if (input.stream) {
+          input.stream.running({
+            model: input.spec.id,
+            provider: input.spec.provider,
+            tier: input.tier,
+            case_id: c.id,
+          });
+        }
         const r = await withRetry(() =>
           runOneCase(input.spec, input.tier, tools, c),
         );
         results.push(r);
-        process.stdout.write(
-          `  [${input.spec.label.padEnd(16)}] ${input.tier.padEnd(6)} ${c.id} ${
-            r.correct ? "ok " : r.error ? "err" : "miss"
-          } picked=${r.picked_tool ?? "-"}\n`,
-        );
+        if (input.stream) {
+          if (r.error) input.stream.error(r);
+          else input.stream.done(r);
+        } else {
+          process.stdout.write(
+            `  [${input.spec.label.padEnd(16)}] ${input.tier.padEnd(6)} ${c.id} ${
+              r.correct ? "ok " : r.error ? "err" : "miss"
+            } picked=${r.picked_tool ?? "-"}\n`,
+          );
+        }
       }
     },
   );
@@ -139,6 +166,7 @@ export async function runAll(options: {
   tiers: Tier[];
   cases: TestCase[];
   concurrency: number;
+  stream?: Stream;
 }): Promise<CaseResult[]> {
   const all: CaseResult[] = [];
   for (const spec of options.specs) {
@@ -148,6 +176,7 @@ export async function runAll(options: {
         tier,
         cases: options.cases,
         concurrency: options.concurrency,
+        stream: options.stream,
       });
       all.push(...part);
     }

@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>mcp-tool-selection-eval — live</title>
+    <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600&f[]=jetbrains-mono@400,500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: #f7f6f3;
+        --paper-raised: #fafaf8;
+        --ink: #111111;
+        --ink-soft: #2a2a2a;
+        --ink-mute: #6b6a64;
+        --line: #e6e4dd;
+        --line-soft: #eeece5;
+        --ok: #3d6b3a;
+        --warn: #a36a1e;
+        --err: #8b2a2a;
+        --queue: #b3b0a5;
+        --accent: #8a3a1e;
+        --radius: 10px;
+        --shadow: 0 2px 8px rgba(17, 17, 17, 0.04);
+      }
+      html,
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        margin: 0;
+        font-family: "General Sans", ui-sans-serif, sans-serif;
+        font-feature-settings: "ss01", "cv11";
+      }
+      .wrap {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 48px 32px 64px;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 18px;
+        margin-bottom: 32px;
+      }
+      header h1 {
+        font-family: "Instrument Serif", ui-serif, serif;
+        font-weight: 400;
+        font-style: italic;
+        font-size: 34px;
+        letter-spacing: -0.01em;
+        margin: 0;
+      }
+      header small {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        color: var(--ink-mute);
+        font-size: 12px;
+      }
+      .controls {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+      }
+      .controls label {
+        font-size: 13px;
+        color: var(--ink-soft);
+      }
+      .controls input[type="text"] {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 12px;
+        padding: 9px 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--paper-raised);
+        color: var(--ink);
+        width: 460px;
+        max-width: 100%;
+      }
+      .controls input[type="text"]:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 1px;
+      }
+      .controls button,
+      .controls .dropzone {
+        font-family: "General Sans", sans-serif;
+        font-size: 13px;
+        padding: 9px 16px;
+        border: 1px solid var(--line);
+        background: var(--paper-raised);
+        color: var(--ink);
+        border-radius: 8px;
+        cursor: pointer;
+        transition:
+          transform 500ms cubic-bezier(0.16, 1, 0.3, 1),
+          box-shadow 500ms cubic-bezier(0.16, 1, 0.3, 1),
+          border-color 200ms ease;
+      }
+      .controls button:hover,
+      .controls .dropzone:hover {
+        box-shadow: var(--shadow);
+        border-color: #d9d6cc;
+      }
+      .controls button[aria-pressed="true"] {
+        background: var(--ink);
+        color: var(--paper);
+        border-color: var(--ink);
+      }
+      .dropzone {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .dropzone input {
+        display: none;
+      }
+      .meta {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 36px;
+      }
+      .meta .cell {
+        background: var(--paper-raised);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 18px 20px;
+      }
+      .meta .k {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--ink-mute);
+        margin-bottom: 6px;
+      }
+      .meta .v {
+        font-family: "Instrument Serif", serif;
+        font-size: 28px;
+      }
+      .meta .sub {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        color: var(--ink-mute);
+        margin-top: 4px;
+      }
+      section.card {
+        background: var(--paper-raised);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 28px 28px 22px;
+        margin-bottom: 28px;
+      }
+      section.card h2 {
+        font-family: "Instrument Serif", serif;
+        font-weight: 400;
+        font-style: italic;
+        font-size: 22px;
+        margin: 0 0 18px;
+        letter-spacing: -0.005em;
+      }
+      .models-grid {
+        display: grid;
+        gap: 14px;
+      }
+      .model-row {
+        display: grid;
+        grid-template-columns: 160px 1fr 120px;
+        align-items: center;
+        gap: 16px;
+      }
+      .model-row .label {
+        font-family: "General Sans", sans-serif;
+        font-size: 13.5px;
+      }
+      .model-row .prov {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10.5px;
+        color: var(--ink-mute);
+        margin-top: 2px;
+      }
+      .bar {
+        position: relative;
+        height: 8px;
+        background: var(--line-soft);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .bar .fill {
+        position: absolute;
+        inset: 0 auto 0 0;
+        background: var(--ink);
+        border-radius: 99px;
+        transition: width 600ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .bar .fill.err {
+        background: var(--err);
+      }
+      .model-row .counts {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        color: var(--ink-soft);
+        text-align: right;
+      }
+      .leaderboard {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      .leaderboard th,
+      .leaderboard td {
+        text-align: left;
+        padding: 9px 10px;
+        border-bottom: 1px solid var(--line-soft);
+      }
+      .leaderboard th {
+        font-weight: 500;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--ink-mute);
+      }
+      .leaderboard td.num {
+        font-family: "JetBrains Mono", monospace;
+        text-align: right;
+      }
+      .dots {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3px;
+      }
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        background: var(--queue);
+        transition: background 400ms cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+      }
+      .dot[data-status="running"] {
+        background: var(--warn);
+      }
+      .dot[data-status="done-correct"] {
+        background: var(--ok);
+      }
+      .dot[data-status="done-sensible"] {
+        background: #7a8f4e;
+      }
+      .dot[data-status="done-miss"] {
+        background: var(--ink-soft);
+      }
+      .dot[data-status="error"] {
+        background: var(--err);
+      }
+      .legend {
+        margin-top: 16px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        color: var(--ink-mute);
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .legend i {
+        width: 10px;
+        height: 10px;
+        display: inline-block;
+        border-radius: 2px;
+      }
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        color: var(--ink-mute);
+      }
+      .status-pill .orb {
+        width: 8px;
+        height: 8px;
+        border-radius: 99px;
+        background: var(--queue);
+      }
+      .status-pill.live .orb {
+        background: var(--ok);
+        animation: pulse 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      }
+      .status-pill.err .orb {
+        background: var(--err);
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.35;
+        }
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color-scheme: dark;
+          --paper: #131210;
+          --paper-raised: #1a1916;
+          --ink: #f0ede4;
+          --ink-soft: #d8d4c7;
+          --ink-mute: #8a8576;
+          --line: #2a2824;
+          --line-soft: #222020;
+          --ok: #7ea878;
+          --warn: #caa26a;
+          --err: #c4756a;
+          --queue: #44423c;
+          --accent: #d88865;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <h1>live eval stream</h1>
+        <small id="run-id">—</small>
+      </header>
+
+      <div class="controls">
+        <label
+          >source
+          <input
+            id="src"
+            type="text"
+            placeholder="results/runs/&lt;run-id&gt;/stream.log"
+            value=""
+          />
+        </label>
+        <button id="start" aria-pressed="false">follow</button>
+        <label class="dropzone" for="file-input"
+          ><span>drop file</span>
+          <input id="file-input" type="file" accept=".log,.ndjson,.json" />
+        </label>
+        <span id="status" class="status-pill"
+          ><span class="orb"></span><span class="txt">idle</span></span
+        >
+      </div>
+
+      <div class="meta">
+        <div class="cell">
+          <div class="k">cases observed</div>
+          <div class="v" id="m-cases">0</div>
+          <div class="sub" id="m-cases-sub">queued 0 · running 0 · done 0</div>
+        </div>
+        <div class="cell">
+          <div class="k">models</div>
+          <div class="v" id="m-models">0</div>
+          <div class="sub" id="m-models-sub">—</div>
+        </div>
+        <div class="cell">
+          <div class="k">leader</div>
+          <div class="v" id="m-leader">—</div>
+          <div class="sub" id="m-leader-sub">sensible %</div>
+        </div>
+        <div class="cell">
+          <div class="k">last event</div>
+          <div class="v" id="m-last">—</div>
+          <div class="sub" id="m-last-sub">—</div>
+        </div>
+      </div>
+
+      <section class="card">
+        <h2>progress by model</h2>
+        <div id="models" class="models-grid"></div>
+      </section>
+
+      <section class="card">
+        <h2>running leaderboard</h2>
+        <table class="leaderboard">
+          <thead>
+            <tr>
+              <th>model</th>
+              <th class="num">done</th>
+              <th class="num">strict</th>
+              <th class="num">sensible</th>
+              <th class="num">errors</th>
+              <th class="num">avg ms</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body"></tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>case status</h2>
+        <div id="cases"></div>
+        <div class="legend">
+          <span><i style="background: var(--queue)"></i>queued</span>
+          <span><i style="background: var(--warn)"></i>running</span>
+          <span><i style="background: var(--ok)"></i>correct</span>
+          <span><i style="background: #7a8f4e"></i>sensible</span>
+          <span><i style="background: var(--ink-soft)"></i>miss</span>
+          <span><i style="background: var(--err)"></i>error</span>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      const state = {
+        runId: null,
+        models: new Map(), // id -> {label, provider, total, queued, running, done, correct, sensible, errors, latencies: []}
+        cases: new Map(), // `${model}::${tier}::${case_id}` -> status
+        lastOffset: 0,
+        following: false,
+        poller: null,
+      };
+
+      const $ = (sel) => document.querySelector(sel);
+      const $$ = (sel) => document.querySelectorAll(sel);
+
+      function setStatus(text, klass) {
+        const el = $("#status");
+        el.classList.remove("live", "err");
+        if (klass) el.classList.add(klass);
+        el.querySelector(".txt").textContent = text;
+      }
+
+      function key(ev) {
+        return `${ev.model}::${ev.tier}::${ev.case_id}`;
+      }
+
+      function ensureModel(id, provider) {
+        let m = state.models.get(id);
+        if (!m) {
+          m = {
+            id,
+            label: id,
+            provider: provider || "",
+            total: 0,
+            queued: 0,
+            running: 0,
+            done: 0,
+            correct: 0,
+            sensible: 0,
+            errors: 0,
+            latencies: [],
+            cases: new Map(), // case_id -> status
+          };
+          state.models.set(id, m);
+        }
+        if (provider && !m.provider) m.provider = provider;
+        return m;
+      }
+
+      function digestEvent(ev) {
+        if (ev.event === "run_start") {
+          state.runId = ev.run_id;
+          $("#run-id").textContent = ev.run_id;
+          for (const m of ev.models || []) {
+            const mm = ensureModel(m.id);
+            mm.label = m.label || m.id;
+          }
+          return;
+        }
+        if (ev.event === "run_end") {
+          setStatus("run ended", null);
+          return;
+        }
+        if (!ev.run_id) return;
+        if (!state.runId) {
+          state.runId = ev.run_id;
+          $("#run-id").textContent = ev.run_id;
+        }
+        const m = ensureModel(ev.model, ev.provider);
+        const k = `${ev.tier}::${ev.case_id}`;
+        const prev = m.cases.get(k);
+        if (prev !== "queued" && ev.status === "queued") {
+          m.cases.set(k, "queued");
+          m.queued++;
+          m.total++;
+        } else if (ev.status === "running") {
+          if (prev === "queued") m.queued--;
+          m.cases.set(k, "running");
+          m.running++;
+        } else if (ev.status === "done") {
+          if (prev === "running") m.running--;
+          else if (prev === "queued") m.queued--;
+          m.done++;
+          if (ev.score && ev.score.correct) m.correct++;
+          if (ev.score && ev.score.sensible) m.sensible++;
+          if (typeof ev.latency_ms === "number")
+            m.latencies.push(ev.latency_ms);
+          const label =
+            ev.score && ev.score.correct
+              ? "done-correct"
+              : ev.score && ev.score.sensible
+                ? "done-sensible"
+                : "done-miss";
+          m.cases.set(k, label);
+        } else if (ev.status === "error") {
+          if (prev === "running") m.running--;
+          else if (prev === "queued") m.queued--;
+          m.errors++;
+          m.done++;
+          m.cases.set(k, "error");
+        }
+        $("#m-last").textContent = `${ev.status}`;
+        $("#m-last-sub").textContent =
+          `${ev.model.replace(/^claude-/, "")} · ${ev.case_id}`;
+      }
+
+      function render() {
+        let cases = 0,
+          queued = 0,
+          running = 0,
+          done = 0;
+        for (const m of state.models.values()) {
+          cases += m.total;
+          queued += m.queued;
+          running += m.running;
+          done += m.done;
+        }
+        $("#m-cases").textContent = String(done);
+        $("#m-cases-sub").textContent =
+          `queued ${queued} · running ${running} · done ${done} / ${cases || "?"}`;
+        $("#m-models").textContent = String(state.models.size);
+        $("#m-models-sub").textContent = [...state.models.values()]
+          .map((m) => m.label)
+          .slice(0, 3)
+          .join(" · ");
+
+        const models = [...state.models.values()];
+        models.sort((a, b) => a.label.localeCompare(b.label));
+        const root = $("#models");
+        root.innerHTML = "";
+        for (const m of models) {
+          const pct = m.total ? (m.done / m.total) * 100 : 0;
+          const strictPct = m.done ? (m.correct / m.done) * 100 : 0;
+          const row = document.createElement("div");
+          row.className = "model-row";
+          row.innerHTML = `
+            <div>
+              <div class="label">${m.label}</div>
+              <div class="prov">${m.provider || ""}</div>
+            </div>
+            <div class="bar"><div class="fill${m.errors > 0 && m.done === m.errors ? " err" : ""}" style="width:${pct}%"></div></div>
+            <div class="counts">${m.done}/${m.total} · ${strictPct.toFixed(0)}%</div>`;
+          root.appendChild(row);
+        }
+
+        // Leaderboard — sort by sensible rate
+        const rows = models
+          .map((m) => ({
+            m,
+            sensiblePct: m.done ? (m.sensible / m.done) * 100 : 0,
+            strictPct: m.done ? (m.correct / m.done) * 100 : 0,
+            avgMs: m.latencies.length
+              ? m.latencies.reduce((a, b) => a + b, 0) / m.latencies.length
+              : 0,
+          }))
+          .sort((a, b) => b.sensiblePct - a.sensiblePct);
+        const tbody = $("#leaderboard-body");
+        tbody.innerHTML = "";
+        for (const r of rows) {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${r.m.label}</td>
+            <td class="num">${r.m.done}</td>
+            <td class="num">${r.strictPct.toFixed(1)}%</td>
+            <td class="num">${r.sensiblePct.toFixed(1)}%</td>
+            <td class="num">${r.m.errors}</td>
+            <td class="num">${r.avgMs ? r.avgMs.toFixed(0) : "—"}</td>`;
+          tbody.appendChild(tr);
+        }
+        if (rows[0] && rows[0].m.done > 0) {
+          $("#m-leader").textContent = rows[0].m.label;
+          $("#m-leader-sub").textContent =
+            `${rows[0].sensiblePct.toFixed(1)}% sensible · ${rows[0].m.done} done`;
+        }
+
+        // Case status grid — per model
+        const casesRoot = $("#cases");
+        casesRoot.innerHTML = "";
+        for (const m of models) {
+          const wrap = document.createElement("div");
+          wrap.style.marginBottom = "14px";
+          const title = document.createElement("div");
+          title.style.cssText =
+            "font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--ink-mute);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;";
+          title.textContent = m.label;
+          wrap.appendChild(title);
+          const grid = document.createElement("div");
+          grid.className = "dots";
+          const keys = [...m.cases.keys()].sort();
+          for (const k of keys) {
+            const dot = document.createElement("div");
+            dot.className = "dot";
+            dot.setAttribute("data-status", m.cases.get(k));
+            dot.title = `${k} — ${m.cases.get(k)}`;
+            grid.appendChild(dot);
+          }
+          wrap.appendChild(grid);
+          casesRoot.appendChild(wrap);
+        }
+      }
+
+      function parseBlob(text) {
+        const lines = text.split("\n").filter(Boolean);
+        for (const line of lines) {
+          try {
+            digestEvent(JSON.parse(line));
+          } catch (_) {
+            // tolerate partial/malformed lines
+          }
+        }
+        render();
+      }
+
+      async function pollOnce() {
+        const url = $("#src").value.trim();
+        if (!url) return;
+        try {
+          const res = await fetch(url, {
+            headers: { Range: `bytes=${state.lastOffset}-` },
+            cache: "no-store",
+          });
+          if (res.status === 416) return; // no new bytes
+          if (!res.ok && res.status !== 206) {
+            throw new Error(`${res.status}`);
+          }
+          const text = await res.text();
+          if (text) {
+            state.lastOffset += new Blob([text]).size;
+            parseBlob(text);
+            setStatus("following", "live");
+          }
+        } catch (e) {
+          setStatus(`reconnecting (${String(e).slice(0, 40)})`, "err");
+        }
+      }
+
+      function startFollow() {
+        if (state.following) return stopFollow();
+        state.following = true;
+        state.lastOffset = 0;
+        state.models.clear();
+        state.cases.clear();
+        $("#start").setAttribute("aria-pressed", "true");
+        $("#start").textContent = "stop";
+        setStatus("connecting", null);
+        pollOnce();
+        state.poller = setInterval(pollOnce, 1200);
+      }
+
+      function stopFollow() {
+        state.following = false;
+        if (state.poller) clearInterval(state.poller);
+        state.poller = null;
+        $("#start").setAttribute("aria-pressed", "false");
+        $("#start").textContent = "follow";
+        setStatus("idle", null);
+      }
+
+      $("#start").addEventListener("click", startFollow);
+      $("#file-input").addEventListener("change", async (e) => {
+        const f = e.target.files && e.target.files[0];
+        if (!f) return;
+        stopFollow();
+        state.models.clear();
+        state.cases.clear();
+        const text = await f.text();
+        parseBlob(text);
+        setStatus(`loaded ${f.name}`, "live");
+      });
+
+      // If query string ?src=... is present, prefill & auto-follow
+      const params = new URLSearchParams(location.search);
+      if (params.get("src")) {
+        $("#src").value = params.get("src");
+        startFollow();
+      }
+    </script>
+  </body>
+</html>

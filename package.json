@@ -10,7 +10,9 @@
   "scripts": {
     "eval": "tsx src/index.ts",
     "eval:smoke": "tsx src/index.ts --smoke",
+    "fork": "tsx src/index.ts fork",
     "report": "tsx src/report.ts",
+    "viewer": "node -e \"const p=8787;require('http').createServer((req,res)=>{const u=new URL(req.url,'http://x');let f='./'+decodeURIComponent(u.pathname.replace(/^\\\\//,''));if(u.pathname==='/')f='./tail-viewer.html';try{const s=require('fs').statSync(f);if(s.isDirectory())f+='/index.html';const d=require('fs').readFileSync(f);const ext=f.split('.').pop();const ct={html:'text/html',log:'application/x-ndjson',ndjson:'application/x-ndjson',json:'application/json',css:'text/css',js:'text/javascript'}[ext]||'text/plain';res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Accept-Ranges','bytes');const range=req.headers.range;if(range){const m=/bytes=(\\\\d+)-(\\\\d*)/.exec(range);if(m){const start=Number(m[1]);const end=m[2]?Number(m[2]):s.size-1;if(start>=s.size){res.statusCode=416;return res.end();}const chunk=require('fs').readFileSync(f).slice(start,end+1);res.statusCode=206;res.setHeader('Content-Range','bytes '+start+'-'+end+'/'+s.size);res.setHeader('Content-Type',ct);return res.end(chunk);}}res.setHeader('Content-Type',ct);res.end(d);}catch(e){res.statusCode=404;res.end(String(e));}}).listen(p,()=>console.log('viewer http://localhost:'+p+'/tail-viewer.html'));\"",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
